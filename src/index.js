@@ -1,3 +1,6 @@
+import gameBoardFields from "./components/gameBoardFields";
+import createShip from "./components/createShip";
+
 const ship = (bodyLength, whereHits, sunk) => {
     
     return{
@@ -15,7 +18,6 @@ const hit = (hitPosition) => {
 }
 
 const isSunk = (bodyLength) => {
-
     const hits = bodyLength - ship().sunk;
 
     if(hits == 0){
@@ -25,22 +27,8 @@ const isSunk = (bodyLength) => {
     return hits;
 }
 
-const gameBoard = () => {
-    const gameBoardClass = document.querySelector('.gameboard');
-
-    for(let i = 0; i < 10; i++){
-        for(let j = 0; j < 10; j++){
-            const gameField = document.createElement('div');
-            gameField.classList.add('gameField');
-            gameField.dataset.row = i;
-            gameField.dataset.column = j;
-
-            gameBoardClass.appendChild(gameField);
-        }
-    }
-}
-
-gameBoard();
+gameBoardFields();
+createShip();
 
 document.addEventListener('click', (e) => {
     if(e.target.classList.contains('gameField')){
