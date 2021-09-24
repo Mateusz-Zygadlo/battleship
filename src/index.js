@@ -37,3 +37,46 @@ document.addEventListener('click', (e) => {
 
     return;
 })
+
+let dragged;
+
+
+document.addEventListener("dragstart", function(e) {
+    dragged = e.target;
+
+    e.target.style.opacity = .3;
+}, false);
+
+document.addEventListener("dragend", function(e) {
+    e.target.style.opacity = "";
+    e.target.dataset.row = e.target.parentNode.dataset.row;
+    e.target.dataset.column = e.target.parentNode.dataset.column;
+
+    console.log(e.target.dataset.row, e.target.dataset.column);
+}, false);
+
+document.addEventListener("dragover", function(e) {
+    e.preventDefault();
+}, false);
+
+document.addEventListener("dragenter", function(e) {
+    if(e.target.className == "gameField"){
+        e.target.style.background = "yellow";
+    }
+}, false);
+
+document.addEventListener("dragleave", function(e) {
+
+    if (e.target.className == "gameField"){
+        e.target.style.background = "";
+    }
+}, false);
+
+document.addEventListener("drop", function(e) {
+    e.preventDefault();
+    if (e.target.className == "gameField") {
+        e.target.style.background = "";
+        dragged.parentNode.removeChild(dragged);
+        e.target.appendChild(dragged);
+    }
+}, false);
