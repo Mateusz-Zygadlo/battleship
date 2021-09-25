@@ -15,6 +15,7 @@ const gameBoardFields = () => {
                 draggableDiv.dataset.row = i;
                 draggableDiv.dataset.column = j;
 
+
                 gameField.appendChild(draggableDiv);
 
                 gameBoardClass.appendChild(gameField);
