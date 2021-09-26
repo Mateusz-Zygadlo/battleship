@@ -24,6 +24,14 @@ body{
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: repeat(10, 1fr);
 }
+.computerGameBoard{
+    width: 500px;
+    height: 500px;
+    background-color: aquamarine;
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+}
 .gameField{
     border: 1px solid black;
 }
@@ -77,4 +85,7 @@ body{
 }
 .blocked{
     background-color: pink;
+}
+.field{
+    border: 1px solid black;
 }

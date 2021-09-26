@@ -1,6 +1,23 @@
 import gameBoardFields from "./components/gameBoardFields";
 import createShip from "./components/createShip";
+import computerGameBoardField from "./components/computerGameBoardField";
+import compterChoice from './components/computerChoice';
 
+
+computerGameBoardField();
+
+const gameFieldsArr = [];
+let count = 0;
+
+for(let i = 0; i < 10; i++){
+    const newArr = [];
+
+    for(let j = 0; j < 10; j++){
+        newArr.push(count);
+        count++;
+    }
+    gameFieldsArr.push(newArr);
+}
 
 const shipNameAndSize = [
     {name: 'Destroyer', size: 2, id: 2, land: false, position: []},
@@ -9,6 +26,109 @@ const shipNameAndSize = [
     {name: 'Battleship', size: 4, id: 4, land: false, position: []},
     {name: 'Carrier', size: 5, id: 5, land: false, position: []},
 ]
+
+const computer = () => {
+    const row = compterChoice().rowChoice;
+    const column = compterChoice().columnChoice;
+    const computerArr = [];
+
+    const shipNameAndSizeComputer = [
+        {name: 'Destroyer', size: 2, id: 2, land: false, position: []},
+        {name: 'Submarine', size: 3, id: 3, land: false, position: []},
+        {name: 'Cruiser', size: 3, id: 3, land: false, position: []},
+        {name: 'Battleship', size: 4, id: 4, land: false, position: []},
+        {name: 'Carrier', size: 5, id: 5, land: false, position: []},
+    ]
+
+    let count = 0;
+
+    for(let i = 0; i < 10; i++){
+        const newArr = [];
+    
+        for(let j = 0; j < 10; j++){
+            newArr.push(count);
+            count++;
+        }
+        computerArr.push(newArr);
+    }
+    for(let i = 0; i < computerArr.length; i++){
+        for(let j = 0; j < computerArr[i].length; j++){
+            if(computerArr[row].includes(column)){
+                if(computerArr[i].includes(column + shipNameAndSize[0].size)){
+                    for(let p = 0; p < shipNameAndSize[0].size; p++){
+
+                        let findIndexOne = computerArr[i].findIndex(item => item == column);
+                
+                        if(findIndexOne > -1){
+                            for(let l = 0; l < shipNameAndSize[0].size; l++){
+                                shipNameAndSizeComputer[0].position.push(computerArr[i][findIndexOne + l]);
+                                computerArr[i][findIndexOne + l] = 'T';
+                            }
+                
+                            if(i > 0 && findIndexOne > 0){
+                                computerArr[i + 1][findIndexOne] = 'y';
+                                for(let p = 0; p < shipNameAndSize[0].size; p++){
+                
+                                    computerArr[i + 1][findIndexOne + p] = 'y';
+                                    computerArr[i - 1][findIndexOne + p] = 'y';
+                                }
+                                computerArr[i][findIndexOne + shipNameAndSize[0].size] = 'y';
+                                computerArr[i][findIndexOne - 1] = 'y';
+                            }else if(computerArr[i][findIndexOne] == computerArr[0][findIndexOne]){
+                                computerArr[i + 1][findIndexOne] = 'y';
+                                for(let p = 0; p < shipNameAndSize[0].size; p++){
+                
+                                    computerArr[i + 1][findIndexOne + p] = 'y';
+                                }
+                                computerArr[i][findIndexOne + shipNameAndSize[0].size] = 'y';
+                                computerArr[i][findIndexOne - 1] = 'y';
+                            }else if(computerArr[i][findIndexOne] == computerArr[9][findIndexOne] && j != 0){
+                                for(let p = 0; p < shipNameAndSize[0].size; p++){
+                
+                                    computerArr[i - 1][findIndexOne + p] = 'y';
+                                }
+                                computerArr[i][shipNameAndSize[0].size + findIndexOne] = 'y';
+                                computerArr[i][findIndexOne - 1] = 'y';
+                            }else if(computerArr[i][findIndexOne] == computerArr[9][findIndexOne]){
+                                for(let p = 0; p < shipNameAndSize[0].size; p++){
+                
+                                    computerArr[i - 1][findIndexOne + p] = 'y';
+                                }
+                                computerArr[i][shipNameAndSize[0].size] = 'y';
+                            }else{
+                                computerArr[i + 1][findIndexOne] = 'y';
+                                computerArr[i - 1][findIndexOne] = 'y';
+                                computerArr[i][findIndexOne + shipNameAndSize[0].size] = 'y';
+                                for(let p = 0; p < shipNameAndSize[0].size; p++){
+                
+                                    computerArr[i + 1][findIndexOne + p] = 'y';
+                                    computerArr[i - 1][findIndexOne + p] = 'y';
+                                }
+                                computerArr[i][findIndexOne - 1] = 'y';
+                            }
+
+                            return {
+                                computerArr,
+                                shipNameAndSizeComputer,
+                            };
+                        
+                        }else{
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+for(let i = 0; i < 1000; i++){
+    if(computer()){
+        console.log(computer());
+
+        return;
+    }
+}
 
 const ship = (bodyLength, whereHits, sunk) => {
     
@@ -37,19 +157,6 @@ const isSunk = (bodyLength) => {
 }
 
 let dragged;
-
-const gameFieldsArr = [];
-let count = 0;
-
-for(let i = 0; i < 10; i++){
-    const newArr = [];
-
-    for(let j = 0; j < 10; j++){
-        newArr.push(count);
-        count++;
-    }
-    gameFieldsArr.push(newArr);
-}
 
 gameBoardFields(gameFieldsArr);
 createShip(shipNameAndSize);
@@ -211,7 +318,6 @@ document.addEventListener("drop", (e) => {
                                 gameFieldsArr[i + 1][j + p] = 'y';
                                 gameFieldsArr[i - 1][j + p] = 'y';
                             }
-                            console.log(i, j);
                         }
                     }
                 }
