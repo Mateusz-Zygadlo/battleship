@@ -3,11 +3,11 @@ import createShip from "./components/createShip";
 
 
 const shipNameAndSize = [
-    {name: 'Destroyer', size: 2, id: 2, land: false},
-    {name: 'Submarine', size: 3, id: 3, land: false},
-    {name: 'Cruiser', size: 3, id: 3, land: false},
-    {name: 'Battleship', size: 4, id: 4, land: false},
-    {name: 'Carrier', size: 5, id: 5, land: false},
+    {name: 'Destroyer', size: 2, id: 2, land: false, position: []},
+    {name: 'Submarine', size: 3, id: 3, land: false, position: []},
+    {name: 'Cruiser', size: 3, id: 3, land: false, position: []},
+    {name: 'Battleship', size: 4, id: 4, land: false, position: []},
+    {name: 'Carrier', size: 5, id: 5, land: false, position: []},
 ]
 
 const ship = (bodyLength, whereHits, sunk) => {
@@ -36,9 +36,6 @@ const isSunk = (bodyLength) => {
     return hits;
 }
 
-gameBoardFields();
-createShip(shipNameAndSize);
-
 let dragged;
 
 const gameFieldsArr = [];
@@ -53,6 +50,9 @@ for(let i = 0; i < 10; i++){
     }
     gameFieldsArr.push(newArr);
 }
+
+gameBoardFields(gameFieldsArr);
+createShip(shipNameAndSize);
 
 document.addEventListener("dragstart", (e) => {
     dragged = e.target;
@@ -154,6 +154,7 @@ document.addEventListener("drop", (e) => {
                 for(let j = 0; j < gameFieldsArr[i].length; j++){
                     if(gameFieldsArr[i][j] == firstPosition){
                         for(let k = 0; k < lengthShip; k++){
+                            shipNameAndSize[indexObj].position.push(gameFieldsArr[i][j + k]);
                             gameFieldsArr[i][j + k] = 'x';
                         }
                     }
@@ -164,6 +165,8 @@ document.addEventListener("drop", (e) => {
 
         createShip(shipNameAndSize);  
     }
+
+    gameBoardFields(gameFieldsArr)
 
     console.log(gameFieldsArr);
     console.log(shipNameAndSize);
