@@ -12,6 +12,13 @@ const gameBoardFields = (gameFieldsArr) => {
                 gameField.dataset.column = j;
 
                 gameBoardClass.appendChild(gameField);
+            }else if(gameFieldsArr[i][j] == 'y'){
+                const gameField = document.createElement('div');
+                gameField.classList.add('blocked');
+                gameField.dataset.row = i;
+                gameField.dataset.column = j;
+
+                gameBoardClass.appendChild(gameField);
             }else{
                 const gameField = document.createElement('div');
                 gameField.classList.add('gameField');

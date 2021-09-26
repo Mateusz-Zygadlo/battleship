@@ -96,9 +96,6 @@ document.addEventListener("drop", (e) => {
         let resultPosition = e.target.dataset.row + e.target.dataset.column;
 
         let stringToInt = Number(resultPosition);
-
-        let row = resultPosition.split('')[0];
-        let column = resultPosition.split('')[1];
     
         for(let i = 0; i < resultPosition.split('').length; i++){
             if(resultPosition.split('')[0] == 0){
@@ -140,11 +137,15 @@ document.addEventListener("drop", (e) => {
             }
         }
 
+        createShip(shipNameAndSize);
+
         if(!isTrue(gameFieldsArr, firstPosition, lastShipPosition, shipIsGoodSize)){
             dragged.parentNode.removeChild(dragged);
             e.target.style.background = "";
             createShip(shipNameAndSize);
             shipNameAndSize[indexObj].land = false;
+
+            gameBoardFields(gameFieldsArr);
         }else{
             e.target.style.background = "";
             dragged.parentNode.removeChild(dragged);
@@ -153,20 +154,93 @@ document.addEventListener("drop", (e) => {
             for(let i = 0; i < gameFieldsArr.length; i++){
                 for(let j = 0; j < gameFieldsArr[i].length; j++){
                     if(gameFieldsArr[i][j] == firstPosition){
-                        for(let k = 0; k < lengthShip; k++){
-                            shipNameAndSize[indexObj].position.push(gameFieldsArr[i][j + k]);
-                            gameFieldsArr[i][j + k] = 'x';
+                        if(gameFieldsArr[i][j] == 0){
+                            for(let k = 0; k < lengthShip; k++){
+                                shipNameAndSize[indexObj].position.push(gameFieldsArr[i][j + k]);
+                                gameFieldsArr[i][j + k] = 'x';
+                            }
+                            gameFieldsArr[i + 1][j] = 'y';
+                            for(let p = 0; p < lengthShip; p++){
+                                gameFieldsArr[i + 1][j + p] = 'y';
+                            }
+                            gameFieldsArr[i][j + lengthShip] = 'y';
+
+                            console.log(i);
+                        }else if(gameFieldsArr[i][j] == gameFieldsArr[0][j]){
+                            for(let k = 0; k < lengthShip; k++){
+                                shipNameAndSize[indexObj].position.push(gameFieldsArr[i][j + k]);
+                                gameFieldsArr[i][j + k] = 'x';
+                            }
+                            gameFieldsArr[i + 1][j] = 'y';
+                            for(let p = 0; p < lengthShip; p++){
+                                gameFieldsArr[i + 1][j + p] = 'y';
+                            }
+                            gameFieldsArr[i][firstPosition - 1] = 'y';
+                            gameFieldsArr[i][lastShipPosition + 1] = 'y';
+                        }else if(gameFieldsArr[i][j] == gameFieldsArr[9][j] && j != 0){
+                            for(let k = 0; k < lengthShip; k++){
+                                shipNameAndSize[indexObj].position.push(gameFieldsArr[i][j + k]);
+                                gameFieldsArr[i][j + k] = 'x';
+                            }
+                            for(let p = 0; p < lengthShip; p++){
+                                gameFieldsArr[i - 1][j + p] = 'y';
+                            }
+                            console.log(true, false);
+                            gameFieldsArr[i][lengthShip + j] = 'y';
+                            gameFieldsArr[i][j - 1] = 'y';
+                        }else if(gameFieldsArr[i][j] == gameFieldsArr[9][j]){
+                            for(let k = 0; k < lengthShip; k++){
+                                shipNameAndSize[indexObj].position.push(gameFieldsArr[i][j + k]);
+                                gameFieldsArr[i][j + k] = 'x';
+                            }
+                            for(let p = 0; p < lengthShip; p++){
+                                gameFieldsArr[i - 1][j + p] = 'y';
+                            }
+                            console.log(true, false);
+                            gameFieldsArr[i][lengthShip] = 'y';
+                        }else{
+                            for(let k = 0; k < lengthShip; k++){
+                                shipNameAndSize[indexObj].position.push(gameFieldsArr[i][j + k]);
+                                gameFieldsArr[i][j + k] = 'x';
+                            }
+                            gameFieldsArr[i + 1][j] = 'y';
+                            gameFieldsArr[i - 1][j] = 'y';
+                            gameFieldsArr[i][j - 1] = 'y';
+                            gameFieldsArr[i][j + lengthShip] = 'y';
+                            for(let p = 0; p < lengthShip; p++){
+                                gameFieldsArr[i + 1][j + p] = 'y';
+                                gameFieldsArr[i - 1][j + p] = 'y';
+                            }
+                            console.log(i, j);
                         }
                     }
                 }
             }
             dragged.parentNode.removeChild(dragged);
         }
-
         createShip(shipNameAndSize);  
     }
 
-    gameBoardFields(gameFieldsArr)
+    const isPositionTrue = (shipNameAndSize) => {
+        let count = 0;
+        for(let i = 0; i < shipNameAndSize.length; i++){
+            if(shipNameAndSize[i].position.length){
+                count++;
+            }
+        }
+
+        if(count == 5){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    if(isPositionTrue(shipNameAndSize)){
+        console.log('start game')
+    }
+
+    gameBoardFields(gameFieldsArr);
 
     console.log(gameFieldsArr);
     console.log(shipNameAndSize);

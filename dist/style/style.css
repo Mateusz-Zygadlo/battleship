@@ -75,3 +75,6 @@ body{
 .checked{
     background-color: black;
 }
+.blocked{
+    background-color: pink;
+}
