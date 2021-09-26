@@ -149,8 +149,22 @@ document.addEventListener("drop", (e) => {
             e.target.style.background = "";
             dragged.parentNode.removeChild(dragged);
             e.target.appendChild(dragged);
+            
+            for(let i = 0; i < gameFieldsArr.length; i++){
+                for(let j = 0; j < gameFieldsArr[i].length; j++){
+                    if(gameFieldsArr[i][j] == firstPosition){
+                        for(let k = 0; k < lengthShip; k++){
+                            gameFieldsArr[i][j + k] = 'x';
+                        }
+                    }
+                }
+            }
+            dragged.parentNode.removeChild(dragged);
         }
 
         createShip(shipNameAndSize);  
     }
+
+    console.log(gameFieldsArr);
+    console.log(shipNameAndSize);
 }, false);

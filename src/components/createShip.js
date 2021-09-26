@@ -5,7 +5,7 @@ const createShip = (shipNameAndSize) => {
 
     for(let i = 0; i < shipNameAndSize.length; i++){
         if(shipNameAndSize[i].land == true){
-            console.log('is land');
+
         }else{
             const ship = document.createElement('div');
             ship.classList.add('ship');
@@ -16,6 +16,7 @@ const createShip = (shipNameAndSize) => {
             ship.style.height = '50px';
             ship.style.backgroundColor = 'black'; 
             ship.draggable = true;
+
 
             for(let j = 0; j < shipNameAndSize[i].size; j++){
                 const square = document.createElement('div');
