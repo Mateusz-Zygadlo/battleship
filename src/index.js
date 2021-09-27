@@ -3,9 +3,6 @@ import createShip from "./components/createShip";
 import computerGameBoardField from "./components/computerGameBoardField";
 import compterChoice from './components/computerChoice';
 
-
-computerGameBoardField();
-
 const gameFieldsArr = [];
 let count = 0;
 
@@ -27,22 +24,42 @@ const shipNameAndSize = [
     {name: 'Carrier', size: 5, id: 5, land: false, position: []},
 ]
 
+const shipNameAndSizeComputer = [
+    {name: 'Destroyer', size: 2, id: 2, land: false, position: []},
+    {name: 'Submarine', size: 3, id: 3, land: false, position: []},
+    {name: 'Cruiser', size: 3, id: 3, land: false, position: []},
+    {name: 'Battleship', size: 4, id: 4, land: false, position: []},
+    {name: 'Carrier', size: 5, id: 5, land: false, position: []},
+]
+
+const trueOrFalse = (item) => {
+    return item !== 'X';
+}
+
+const trueOrFalseTwo = (item) => {
+    return item == 'X';
+}
+
+let computerArr = [];
+
+for(let i = 0; i < 10; i++){
+    const newArr = [];
+
+    for(let j = 0; j < 10; j++){
+        newArr.push(count);
+        count++;
+    }
+    computerArr.push(newArr);
+}
+
 const computer = () => {
     const row = compterChoice().rowChoice;
     const column = compterChoice().columnChoice;
-    let computerArr = [];
+    computerArr.length = 0;
 
     const randomPosition = (num) => {
         return Math.floor(Math.random() * 94) + shipNameAndSizeComputer[num].size;
     }
-
-    const shipNameAndSizeComputer = [
-        {name: 'Destroyer', size: 2, id: 2, land: false, position: []},
-        {name: 'Submarine', size: 3, id: 3, land: false, position: []},
-        {name: 'Cruiser', size: 3, id: 3, land: false, position: []},
-        {name: 'Battleship', size: 4, id: 4, land: false, position: []},
-        {name: 'Carrier', size: 5, id: 5, land: false, position: []},
-    ]
 
     let count = 0;
 
@@ -56,8 +73,46 @@ const computer = () => {
         computerArr.push(newArr);
     }
 
+    let countArr = 0;
+
+    computerGameBoardField(computerArr);
+
     for(let b = 0; b < 1000; b++){
+        for(let x = 0; x < shipNameAndSizeComputer.length; x++){
+            if(shipNameAndSizeComputer[x].position.every(trueOrFalse)){
+
+            }else{
+                shipNameAndSizeComputer[x].position.length = 0;
+            }
+        }
+
         if(shipNameAndSizeComputer[0].position.length && shipNameAndSizeComputer[1].position.length && shipNameAndSizeComputer[2].position.length && shipNameAndSizeComputer[3].position.length && shipNameAndSizeComputer[4].position.length){
+            for(let o = 0; o < 10; o++){
+                if(computerArr[o].filter(item =>  item == 'X')){
+                    countArr += computerArr[o].filter(item => item == 'X').length;
+                };
+            }
+            console.log(countArr);
+
+            if(countArr == 17){
+
+            }else{
+                computerArr.length = 0;
+                for(let i = 0; i < 10; i++){
+                    const newArr = [];
+                
+                    for(let j = 0; j < 10; j++){
+                        newArr.push(count);
+                        count++;
+                    }
+                    computerArr.push(newArr);
+                }
+                for(let q = 0; q < 5; q++){
+                    shipNameAndSizeComputer[q].position.length = 0;
+                }
+                break;
+            }
+            
             return {
                 computerArr,
                 shipNameAndSizeComputer,
@@ -68,53 +123,34 @@ const computer = () => {
                 
                 }else{
                     const value = randomPosition(i);
-                let row;
-                let column;
+                    let row;
+                    let column;
         
                 if(value.toString().length == 1){
                     row = 0;
                     column = Number(value.toString().split('')[0]);
                 }else{
                     row = Number(value.toString().split('')[0]);
-                   column = Number(value.toString().split('')[1]);
+                    column = Number(value.toString().split('')[1]);
                 }
         
                 const findIndexComputer = computerArr[row].findIndex(item => item == value);
         
-                if(findIndexComputer >= 0){
-                    if(findIndexComputer - shipNameAndSizeComputer[i].size > 0){
-                        for(let j = 1; j <= shipNameAndSizeComputer[i].size; j++){
+                if(findIndexComputer > 0){
+                    if(findIndexComputer - shipNameAndSizeComputer[i].size >= 0){             
+                        for(let j = 0; j < shipNameAndSizeComputer[i].size; j++){
                             shipNameAndSizeComputer[i].position.push(computerArr[row][findIndexComputer - j]);
                             computerArr[row][findIndexComputer - j] = 'X';
                         }
-                    }else{
-                        const value = randomPosition(i);
-                        let row;
-                        let column;
-        
-                        for(let p = 0; p < 1000; p++){
-                            row = Number(value.toString().split('')[0]);
-                            column = Number(value.toString().split('')[1]);
-        
-                            if(findIndexComputer >= 0){
-                                if(findIndexComputer - shipNameAndSizeComputer[i].size > 0){
-                                    for(let j = 1; j <= shipNameAndSizeComputer[i].size; j++){
-                                        shipNameAndSizeComputer[i].position.push(computerArr[row][findIndexComputer - j]);
-                                        computerArr[row][findIndexComputer - j] = 'X';
-                                    }
-                                    break;
-                                }
-                            }
                         }
                     }
-                }
                 } 
             }
         }
     }
 }
-
-console.log(computer());
+computer();
+computerGameBoardField(computerArr);
 
 const ship = (bodyLength, whereHits, sunk) => {
     
