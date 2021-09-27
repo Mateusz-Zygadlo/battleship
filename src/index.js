@@ -30,7 +30,11 @@ const shipNameAndSize = [
 const computer = () => {
     const row = compterChoice().rowChoice;
     const column = compterChoice().columnChoice;
-    const computerArr = [];
+    let computerArr = [];
+
+    const randomPosition = (num) => {
+        return Math.floor(Math.random() * 94) + shipNameAndSizeComputer[num].size;
+    }
 
     const shipNameAndSizeComputer = [
         {name: 'Destroyer', size: 2, id: 2, land: false, position: []},
@@ -51,84 +55,66 @@ const computer = () => {
         }
         computerArr.push(newArr);
     }
-    for(let i = 0; i < computerArr.length; i++){
-        for(let j = 0; j < computerArr[i].length; j++){
-            if(computerArr[row].includes(column)){
-                if(computerArr[i].includes(column + shipNameAndSize[0].size)){
-                    for(let p = 0; p < shipNameAndSize[0].size; p++){
 
-                        let findIndexOne = computerArr[i].findIndex(item => item == column);
+    for(let b = 0; b < 1000; b++){
+        if(shipNameAndSizeComputer[0].position.length && shipNameAndSizeComputer[1].position.length && shipNameAndSizeComputer[2].position.length && shipNameAndSizeComputer[3].position.length && shipNameAndSizeComputer[4].position.length){
+            return {
+                computerArr,
+                shipNameAndSizeComputer,
+            };
+        }else{
+            for(let i = 0; i < shipNameAndSizeComputer.length; i++){
+                if(shipNameAndSizeComputer[i].position.length > 1){
                 
-                        if(findIndexOne > -1){
-                            for(let l = 0; l < shipNameAndSize[0].size; l++){
-                                shipNameAndSizeComputer[0].position.push(computerArr[i][findIndexOne + l]);
-                                computerArr[i][findIndexOne + l] = 'T';
+                }else{
+                    const value = randomPosition(i);
+                let row;
+                let column;
+        
+                if(value.toString().length == 1){
+                    row = 0;
+                    column = Number(value.toString().split('')[0]);
+                }else{
+                    row = Number(value.toString().split('')[0]);
+                   column = Number(value.toString().split('')[1]);
+                }
+        
+                const findIndexComputer = computerArr[row].findIndex(item => item == value);
+        
+                if(findIndexComputer >= 0){
+                    if(findIndexComputer - shipNameAndSizeComputer[i].size > 0){
+                        for(let j = 1; j <= shipNameAndSizeComputer[i].size; j++){
+                            shipNameAndSizeComputer[i].position.push(computerArr[row][findIndexComputer - j]);
+                            computerArr[row][findIndexComputer - j] = 'X';
+                        }
+                    }else{
+                        const value = randomPosition(i);
+                        let row;
+                        let column;
+        
+                        for(let p = 0; p < 1000; p++){
+                            row = Number(value.toString().split('')[0]);
+                            column = Number(value.toString().split('')[1]);
+        
+                            if(findIndexComputer >= 0){
+                                if(findIndexComputer - shipNameAndSizeComputer[i].size > 0){
+                                    for(let j = 1; j <= shipNameAndSizeComputer[i].size; j++){
+                                        shipNameAndSizeComputer[i].position.push(computerArr[row][findIndexComputer - j]);
+                                        computerArr[row][findIndexComputer - j] = 'X';
+                                    }
+                                    break;
+                                }
                             }
-                
-                            if(i > 0 && findIndexOne > 0){
-                                computerArr[i + 1][findIndexOne] = 'y';
-                                for(let p = 0; p < shipNameAndSize[0].size; p++){
-                
-                                    computerArr[i + 1][findIndexOne + p] = 'y';
-                                    computerArr[i - 1][findIndexOne + p] = 'y';
-                                }
-                                computerArr[i][findIndexOne + shipNameAndSize[0].size] = 'y';
-                                computerArr[i][findIndexOne - 1] = 'y';
-                            }else if(computerArr[i][findIndexOne] == computerArr[0][findIndexOne]){
-                                computerArr[i + 1][findIndexOne] = 'y';
-                                for(let p = 0; p < shipNameAndSize[0].size; p++){
-                
-                                    computerArr[i + 1][findIndexOne + p] = 'y';
-                                }
-                                computerArr[i][findIndexOne + shipNameAndSize[0].size] = 'y';
-                                computerArr[i][findIndexOne - 1] = 'y';
-                            }else if(computerArr[i][findIndexOne] == computerArr[9][findIndexOne] && j != 0){
-                                for(let p = 0; p < shipNameAndSize[0].size; p++){
-                
-                                    computerArr[i - 1][findIndexOne + p] = 'y';
-                                }
-                                computerArr[i][shipNameAndSize[0].size + findIndexOne] = 'y';
-                                computerArr[i][findIndexOne - 1] = 'y';
-                            }else if(computerArr[i][findIndexOne] == computerArr[9][findIndexOne]){
-                                for(let p = 0; p < shipNameAndSize[0].size; p++){
-                
-                                    computerArr[i - 1][findIndexOne + p] = 'y';
-                                }
-                                computerArr[i][shipNameAndSize[0].size] = 'y';
-                            }else{
-                                computerArr[i + 1][findIndexOne] = 'y';
-                                computerArr[i - 1][findIndexOne] = 'y';
-                                computerArr[i][findIndexOne + shipNameAndSize[0].size] = 'y';
-                                for(let p = 0; p < shipNameAndSize[0].size; p++){
-                
-                                    computerArr[i + 1][findIndexOne + p] = 'y';
-                                    computerArr[i - 1][findIndexOne + p] = 'y';
-                                }
-                                computerArr[i][findIndexOne - 1] = 'y';
-                            }
-
-                            return {
-                                computerArr,
-                                shipNameAndSizeComputer,
-                            };
-                        
-                        }else{
-                            return false;
                         }
                     }
                 }
+                } 
             }
         }
     }
 }
 
-for(let i = 0; i < 1000; i++){
-    if(computer()){
-        console.log(computer());
-
-        return;
-    }
-}
+console.log(computer());
 
 const ship = (bodyLength, whereHits, sunk) => {
     
