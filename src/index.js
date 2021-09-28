@@ -32,6 +32,18 @@ const shipNameAndSizeComputer = [
     {name: 'Carrier', size: 5, id: 5, position: []},
 ]
 
+let computerPlaysRandom = [];
+
+for(let i = 0; i < 100; i++){
+    computerPlaysRandom.push(i);
+}
+
+let playerIndexPlays = [];
+
+for(let i = 0; i < 100; i++){
+    playerIndexPlays.push(i);
+}
+
 const trueOrFalse = (item) => {
     return item !== 'X';
 }
@@ -148,25 +160,29 @@ for(let i = 0; i < 10; i++){
 
 let countComputerCoppy = 0;
 
-for(let i = 0; i < shipNameAndSizeComputer.length; i++){
-    for(let j = 0; j < shipNameAndSizeComputer[i].position.length; j++){
-        
-        let row;
-        let column;
-
-        if(shipNameAndSizeComputer[i].position[j].toString().split('').length == 1){
-            row = 0;
-            column = Number(shipNameAndSizeComputer[i].position[j].toString().split('')[0]);
-        }else{
-            row = shipNameAndSizeComputer[i].position[j].toString().split('')[0];
-            column = shipNameAndSizeComputer[i].position[j].toString().split('')[1];
+const computerArrTwo = () => {
+    for(let i = 0; i < shipNameAndSizeComputer.length; i++){
+        for(let j = 0; j < shipNameAndSizeComputer[i].position.length; j++){
+            
+            let row;
+            let column;
+    
+            if(shipNameAndSizeComputer[i].position[j].toString().split('').length == 1){
+                row = 0;
+                column = Number(shipNameAndSizeComputer[i].position[j].toString().split('')[0]);
+            }else{
+                row = shipNameAndSizeComputer[i].position[j].toString().split('')[0];
+                column = shipNameAndSizeComputer[i].position[j].toString().split('')[1];
+            }
+    
+            countComputerCoppy++;
+    
+            coppyComputerArr[row][column] = 'X';
         }
-
-        countComputerCoppy++;
-
-        coppyComputerArr[row][column] = 'X';
     }
 }
+
+computerArrTwo();
 
 console.log(coppyComputerArr, countComputerCoppy);
 
@@ -314,8 +330,6 @@ document.addEventListener("drop", (e) => {
                                 gameFieldsArr[i + 1][j + p] = 'y';
                             }
                             gameFieldsArr[i][j + lengthShip] = 'y';
-
-                            console.log(i);
                         }else if(gameFieldsArr[i][j] == gameFieldsArr[0][j]){
                             for(let k = 0; k < lengthShip; k++){
                                 shipNameAndSize[indexObj].position.push(gameFieldsArr[i][j + k]);
@@ -335,7 +349,6 @@ document.addEventListener("drop", (e) => {
                             for(let p = 0; p < lengthShip; p++){
                                 gameFieldsArr[i - 1][j + p] = 'y';
                             }
-                            console.log(true, false);
                             gameFieldsArr[i][lengthShip + j] = 'y';
                             gameFieldsArr[i][j - 1] = 'y';
                         }else if(gameFieldsArr[i][j] == gameFieldsArr[9][j]){
@@ -346,7 +359,6 @@ document.addEventListener("drop", (e) => {
                             for(let p = 0; p < lengthShip; p++){
                                 gameFieldsArr[i - 1][j + p] = 'y';
                             }
-                            console.log(true, false);
                             gameFieldsArr[i][lengthShip] = 'y';
                         }else{
                             for(let k = 0; k < lengthShip; k++){
@@ -384,13 +396,86 @@ document.addEventListener("drop", (e) => {
             return false;
         }
     }
-
-    if(isPositionTrue(shipNameAndSize)){
-        console.log('start game')
-    }
-
+    
     gameBoardFields(gameFieldsArr);
 
-    console.log(gameFieldsArr);
-    console.log(shipNameAndSize);
+    if(isPositionTrue(shipNameAndSize)){
+        startGame();
+
+        return;
+    }
 }, false);
+
+const startGame = () => {
+    const shipsClass = document.querySelector('.ships');
+    shipsClass.parentNode.removeChild(shipsClass);
+
+    const gameboardMain = document.querySelector('.computerGameBoard');
+    const testGameBoard = [...gameboardMain.childNodes];
+
+    testGameBoard.forEach(item => {
+        item.addEventListener('click', (e) => {                     
+            if(e.target.classList.contains('plays')){
+                let isLenghtToZero = [];
+
+                const index = Number(String(e.target.dataset.row) + String(e.target.dataset.column));
+
+                for(let i = 0; i < shipNameAndSizeComputer.length; i++){
+                    for(let j = 0; j < shipNameAndSizeComputer[i].position.length; j++){
+                        if(shipNameAndSizeComputer[i].position[j] == index){
+                            shipNameAndSizeComputer[i].position.splice(j, 1);
+                        }
+                    }
+                }
+
+                e.target.classList.add('field');
+                e.target.classList.remove('plays');
+
+                for(let o = 0; o < shipNameAndSizeComputer.length; o++){
+                    if(shipNameAndSizeComputer[o].position.length == 0){
+                        isLenghtToZero.push('true');
+                    }
+                }
+
+                if(isLenghtToZero.length == 5){
+                    console.log('You win');
+                    return;
+                }
+            }
+            for(let r = 0; r < 100; r++){
+                computerRandomPlays();
+                console.log(computerPlaysRandom.length);
+            }
+        })
+    })
+}
+
+const computerRandomPlays = () => {
+    for(let f = 0; f < 1000; f++){
+        const randomNumber = Math.floor(Math.random() * 99);
+
+        if(computerPlaysRandom.findIndex(item => item == randomNumber) > -1){
+            let row;
+            let column;
+            let index = computerPlaysRandom.findIndex(item => item == randomNumber);
+    
+            if(randomNumber.toString().split('').length == 1){
+                row = 0;
+                column = Number(randomNumber.toString().split('')[0]);
+            }else{
+                row = Number(randomNumber.toString().split('')[0]);
+                column = Number(randomNumber.toString().split('')[1]);
+            }
+
+            for(let i = 0; i < shipNameAndSize.length; i++){
+                for(let j = 0; j < shipNameAndSize[i].position.length; j++){
+                    if(shipNameAndSize[i].position[j] == index){
+                        shipNameAndSize[i].position.splice(j, 1);
+                        computerPlaysRandom.splice(index, 1);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+}
