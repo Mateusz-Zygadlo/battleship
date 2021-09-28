@@ -25,11 +25,11 @@ const shipNameAndSize = [
 ]
 
 const shipNameAndSizeComputer = [
-    {name: 'Destroyer', size: 2, id: 2, land: false, position: []},
-    {name: 'Submarine', size: 3, id: 3, land: false, position: []},
-    {name: 'Cruiser', size: 3, id: 3, land: false, position: []},
-    {name: 'Battleship', size: 4, id: 4, land: false, position: []},
-    {name: 'Carrier', size: 5, id: 5, land: false, position: []},
+    {name: 'Destroyer', size: 2, id: 2, position: []},
+    {name: 'Submarine', size: 3, id: 3, position: []},
+    {name: 'Cruiser', size: 3, id: 3, position: []},
+    {name: 'Battleship', size: 4, id: 4, position: []},
+    {name: 'Carrier', size: 5, id: 5, position: []},
 ]
 
 const trueOrFalse = (item) => {
@@ -93,25 +93,6 @@ const computer = () => {
                 };
             }
             console.log(countArr);
-
-            if(countArr == 17){
-
-            }else{
-                computerArr.length = 0;
-                for(let i = 0; i < 10; i++){
-                    const newArr = [];
-                
-                    for(let j = 0; j < 10; j++){
-                        newArr.push(count);
-                        count++;
-                    }
-                    computerArr.push(newArr);
-                }
-                for(let q = 0; q < 5; q++){
-                    shipNameAndSizeComputer[q].position.length = 0;
-                }
-                break;
-            }
             
             return {
                 computerArr,
@@ -150,7 +131,47 @@ const computer = () => {
     }
 }
 computer();
-computerGameBoardField(computerArr);
+
+const coppyComputerArr = [];
+
+let countCompoter = 0;
+
+for(let i = 0; i < 10; i++){
+    const newArr = [];
+
+    for(let j = 0; j < 10; j++){
+        newArr.push(countCompoter);
+        countCompoter++;
+    }
+    coppyComputerArr.push(newArr);
+}
+
+let countComputerCoppy = 0;
+
+for(let i = 0; i < shipNameAndSizeComputer.length; i++){
+    for(let j = 0; j < shipNameAndSizeComputer[i].position.length; j++){
+        
+        let row;
+        let column;
+
+        if(shipNameAndSizeComputer[i].position[j].toString().split('').length == 1){
+            row = 0;
+            column = Number(shipNameAndSizeComputer[i].position[j].toString().split('')[0]);
+        }else{
+            row = shipNameAndSizeComputer[i].position[j].toString().split('')[0];
+            column = shipNameAndSizeComputer[i].position[j].toString().split('')[1];
+        }
+
+        countComputerCoppy++;
+
+        coppyComputerArr[row][column] = 'X';
+    }
+}
+
+console.log(coppyComputerArr, countComputerCoppy);
+
+
+computerGameBoardField(coppyComputerArr);
 
 const ship = (bodyLength, whereHits, sunk) => {
     
