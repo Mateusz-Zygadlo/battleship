@@ -25,31 +25,27 @@ const shipNameAndSize = [
 ]
 
 const shipNameAndSizeComputer = [
-    {name: 'Destroyer', size: 2, id: 2, position: []},
-    {name: 'Submarine', size: 3, id: 3, position: []},
-    {name: 'Cruiser', size: 3, id: 3, position: []},
-    {name: 'Battleship', size: 4, id: 4, position: []},
-    {name: 'Carrier', size: 5, id: 5, position: []},
+    {name: 'Destroyer', size: 2, position: []},
+    {name: 'Submarine', size: 3, position: []},
+    {name: 'Cruiser', size: 3, position: []},
+    {name: 'Battleship', size: 4, position: []},
+    {name: 'Carrier', size: 5, position: []},
 ]
 
 let computerPlaysRandom = [];
-
-for(let i = 0; i < 100; i++){
-    computerPlaysRandom.push(i);
-}
-
 let playerIndexPlays = [];
 
-for(let i = 0; i < 100; i++){
-    playerIndexPlays.push(i);
+const addHundredNumbers = (arr) => {
+    for(let i = 0; i < 100; i++){
+        arr.push(i);
+    }
 }
+
+addHundredNumbers(playerIndexPlays);
+addHundredNumbers(computerPlaysRandom);
 
 const trueOrFalse = (item) => {
     return item !== 'X';
-}
-
-const trueOrFalseTwo = (item) => {
-    return item == 'X';
 }
 
 let computerArr = [];
@@ -438,14 +434,14 @@ const startGame = () => {
                 }
 
                 if(isLenghtToZero.length == 5){
-                    console.log('You win');
+                    winnerPage('you, [player]');
                     return;
                 }
             }
-            for(let r = 0; r < 100; r++){
-                computerRandomPlays();
-                console.log(computerPlaysRandom.length);
-            }
+            computerRandomPlays();
+            console.log(computerPlaysRandom.length);
+
+            console.log(shipNameAndSize);
         })
     })
 }
@@ -467,15 +463,60 @@ const computerRandomPlays = () => {
                 column = Number(randomNumber.toString().split('')[1]);
             }
 
-            for(let i = 0; i < shipNameAndSize.length; i++){
-                for(let j = 0; j < shipNameAndSize[i].position.length; j++){
-                    if(shipNameAndSize[i].position[j] == index){
-                        shipNameAndSize[i].position.splice(j, 1);
-                        computerPlaysRandom.splice(index, 1);
-                        return;
+            let removedItem = computerPlaysRandom.splice(index, 1);
+
+            if(removedItem){
+                for(let i = 0; i < shipNameAndSize.length; i++){
+                    for(let j = 0; j < shipNameAndSize[i].position.length; j++){
+                        if(shipNameAndSize[i].position[j] == removedItem){
+                            shipNameAndSize[i].position.splice(j, 1);
+
+                            console.log('Computer blow', computerPlaysRandom.length);
+    
+                            let isLenghtToZero = [];
+    
+                            for(let o = 0; o < shipNameAndSize.length; o++){
+                                if(shipNameAndSize[o].position.length == 0){
+                                    isLenghtToZero.push('true');
+                                }
+                            }
+            
+                            if(isLenghtToZero.length == 5){
+                                winnerPage('computer');
+                                return;
+                            }
+    
+                            return;
+                        }
                     }
                 }
+
+                let positionLengthArr = [];
+
+                for(let b = 0; b < shipNameAndSize.length; b++){
+                    for(let c = 0; c < shipNameAndSize[b].position.length; c++){
+                        positionLengthArr.push(shipNameAndSize[b].position[c]);
+                    }
+                }
+
+                console.log('You not blow', computerPlaysRandom.length, positionLengthArr.length);
+
+                return;
             }
         }
     }
+}
+
+const winnerPage = (winner) => {
+    const game = document.querySelector('.game');
+    
+    const fixedWinnerPage = document.createElement('div');
+    fixedWinnerPage.classList.add('fixedWinnerPage');
+    
+    const h1 = document.createElement('h1');
+    h1.textContent = `The winner is [${winner}]`;
+
+    fixedWinnerPage.appendChild(h1);
+
+    game.appendChild(fixedWinnerPage);
 }
