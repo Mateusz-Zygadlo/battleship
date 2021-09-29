@@ -1,20 +1,24 @@
 import gameBoardFields from "./components/gameBoardFields";
 import createShip from "./components/createShip";
 import computerGameBoardField from "./components/computerGameBoardField";
-import compterChoice from './components/computerChoice';
 
 const gameFieldsArr = [];
-let count = 0;
 
-for(let i = 0; i < 10; i++){
-    const newArr = [];
+const addCountInTenArr = (arr) => {
+    let count = 0;
 
-    for(let j = 0; j < 10; j++){
-        newArr.push(count);
-        count++;
+    for(let i = 0; i < 10; i++){
+        const newArr = [];
+    
+        for(let j = 0; j < 10; j++){
+            newArr.push(count);
+            count++;
+        }
+        arr.push(newArr);
     }
-    gameFieldsArr.push(newArr);
 }
+
+addCountInTenArr(gameFieldsArr);
 
 const shipNameAndSize = [
     {name: 'Destroyer', size: 2, id: 2, land: false, position: []},
@@ -50,39 +54,17 @@ const trueOrFalse = (item) => {
 
 let computerArr = [];
 
-for(let i = 0; i < 10; i++){
-    const newArr = [];
+addCountInTenArr(computerArr);
 
-    for(let j = 0; j < 10; j++){
-        newArr.push(count);
-        count++;
-    }
-    computerArr.push(newArr);
+const randomPosition = (num) => {
+    return Math.floor(Math.random() * 94) + shipNameAndSizeComputer[num].size;
 }
 
 const computer = () => {
-    const row = compterChoice().rowChoice;
-    const column = compterChoice().columnChoice;
+    let countArr = 0;
     computerArr.length = 0;
 
-    const randomPosition = (num) => {
-        return Math.floor(Math.random() * 94) + shipNameAndSizeComputer[num].size;
-    }
-
-    let count = 0;
-
-    for(let i = 0; i < 10; i++){
-        const newArr = [];
-    
-        for(let j = 0; j < 10; j++){
-            newArr.push(count);
-            count++;
-        }
-        computerArr.push(newArr);
-    }
-
-    let countArr = 0;
-
+    addCountInTenArr(computerArr);
     computerGameBoardField(computerArr);
 
     for(let b = 0; b < 1000; b++){
@@ -115,22 +97,22 @@ const computer = () => {
                     let row;
                     let column;
         
-                if(value.toString().length == 1){
-                    row = 0;
-                    column = Number(value.toString().split('')[0]);
-                }else{
-                    row = Number(value.toString().split('')[0]);
-                    column = Number(value.toString().split('')[1]);
-                }
+                    if(value.toString().length == 1){
+                        row = 0;
+                        column = Number(value.toString().split('')[0]);
+                    }else{
+                        row = Number(value.toString().split('')[0]);
+                        column = Number(value.toString().split('')[1]);
+                    }
         
-                const findIndexComputer = computerArr[row].findIndex(item => item == value);
+                    const findIndexComputer = computerArr[row].findIndex(item => item == value);
         
-                if(findIndexComputer > 0){
-                    if(findIndexComputer - shipNameAndSizeComputer[i].size >= 0){             
-                        for(let j = 0; j < shipNameAndSizeComputer[i].size; j++){
-                            shipNameAndSizeComputer[i].position.push(computerArr[row][findIndexComputer - j]);
-                            computerArr[row][findIndexComputer - j] = 'X';
-                        }
+                    if(findIndexComputer > 0){
+                        if(findIndexComputer - shipNameAndSizeComputer[i].size >= 0){             
+                            for(let j = 0; j < shipNameAndSizeComputer[i].size; j++){
+                                shipNameAndSizeComputer[i].position.push(computerArr[row][findIndexComputer - j]);
+                                computerArr[row][findIndexComputer - j] = 'X';
+                            }
                         }
                     }
                 } 
@@ -142,17 +124,7 @@ computer();
 
 const coppyComputerArr = [];
 
-let countCompoter = 0;
-
-for(let i = 0; i < 10; i++){
-    const newArr = [];
-
-    for(let j = 0; j < 10; j++){
-        newArr.push(countCompoter);
-        countCompoter++;
-    }
-    coppyComputerArr.push(newArr);
-}
+addCountInTenArr(coppyComputerArr);
 
 let countComputerCoppy = 0;
 
@@ -240,11 +212,88 @@ document.addEventListener("dragenter", (e) => {
 }, false);
 
 document.addEventListener("dragleave", (e) => {
-
-    if (e.target.className == "gameField"){
+    if(e.target.className == "gameField"){
         e.target.style.background = "";
     }
 }, false);
+
+const isTrue = (gameFieldsArr, firstPosition, lastShipPosition, shipIsGoodSize, indexObj) => {
+    for(let n = 0; n < gameFieldsArr.length; n++){
+        if(gameFieldsArr[n].includes(firstPosition)){
+            if(gameFieldsArr[n].includes(lastShipPosition)){
+                shipIsGoodSize = true;
+                shipNameAndSize[indexObj].land = true;
+
+                return shipIsGoodSize;
+            }; 
+        
+            return shipIsGoodSize = false;
+        }
+    }
+}
+
+const addYInArr = (gameFieldsArr, firstPosition, lengthShip, indexObj, lastShipPosition) => {
+    for(let i = 0; i < gameFieldsArr.length; i++){
+        for(let j = 0; j < gameFieldsArr[i].length; j++){
+            if(gameFieldsArr[i][j] == firstPosition){
+                if(gameFieldsArr[i][j] == 0){
+                    for(let k = 0; k < lengthShip; k++){
+                        shipNameAndSize[indexObj].position.push(gameFieldsArr[i][j + k]);
+                        gameFieldsArr[i][j + k] = 'x';
+                    }
+                    gameFieldsArr[i + 1][j] = 'y';
+                    for(let p = 0; p < lengthShip; p++){
+                        gameFieldsArr[i + 1][j + p] = 'y';
+                    }
+                    gameFieldsArr[i][j + lengthShip] = 'y';
+                }else if(gameFieldsArr[i][j] == gameFieldsArr[0][j]){
+                    for(let k = 0; k < lengthShip; k++){
+                        shipNameAndSize[indexObj].position.push(gameFieldsArr[i][j + k]);
+                        gameFieldsArr[i][j + k] = 'x';
+                    }
+                    gameFieldsArr[i + 1][j] = 'y';
+                    for(let p = 0; p < lengthShip; p++){
+                        gameFieldsArr[i + 1][j + p] = 'y';
+                    }
+                    gameFieldsArr[i][firstPosition - 1] = 'y';
+                    gameFieldsArr[i][lastShipPosition + 1] = 'y';
+                }else if(gameFieldsArr[i][j] == gameFieldsArr[9][j] && j != 0){
+                    for(let k = 0; k < lengthShip; k++){
+                        shipNameAndSize[indexObj].position.push(gameFieldsArr[i][j + k]);
+                        gameFieldsArr[i][j + k] = 'x';
+                    }
+                    for(let p = 0; p < lengthShip; p++){
+                        gameFieldsArr[i - 1][j + p] = 'y';
+                    }
+                    gameFieldsArr[i][lengthShip + j] = 'y';
+                    gameFieldsArr[i][j - 1] = 'y';
+                }else if(gameFieldsArr[i][j] == gameFieldsArr[9][j]){
+                    for(let k = 0; k < lengthShip; k++){
+                        shipNameAndSize[indexObj].position.push(gameFieldsArr[i][j + k]);
+                        gameFieldsArr[i][j + k] = 'x';
+                    }
+                    for(let p = 0; p < lengthShip; p++){
+                        gameFieldsArr[i - 1][j + p] = 'y';
+                    }
+                    gameFieldsArr[i][lengthShip] = 'y';
+                }else{
+                    for(let k = 0; k < lengthShip; k++){
+                        shipNameAndSize[indexObj].position.push(gameFieldsArr[i][j + k]);
+                        gameFieldsArr[i][j + k] = 'x';
+                    }
+                    gameFieldsArr[i + 1][j] = 'y';
+                    gameFieldsArr[i - 1][j] = 'y';
+                    gameFieldsArr[i][j - 1] = 'y';
+                    gameFieldsArr[i][j + lengthShip] = 'y';
+                    for(let p = 0; p < lengthShip; p++){
+                        gameFieldsArr[i + 1][j + p] = 'y';
+                        gameFieldsArr[i - 1][j + p] = 'y';
+                    }
+                }
+            }
+        }
+    }
+}
 
 document.addEventListener("drop", (e) => {
     e.preventDefault();
@@ -254,9 +303,7 @@ document.addEventListener("drop", (e) => {
         e.target.appendChild(dragged);
 
         let shipIsGoodSize = false;
- 
         let resultPosition = e.target.dataset.row + e.target.dataset.column;
-
         let stringToInt = Number(resultPosition);
     
         for(let i = 0; i < resultPosition.split('').length; i++){
@@ -267,7 +314,6 @@ document.addEventListener("drop", (e) => {
 
         const nameShip = e.target.firstChild.className.split(' ')[1];
         let lengthShip;
-
         let indexObj;
         
         for(let j = 0; j < shipNameAndSize.length; j++){
@@ -284,96 +330,20 @@ document.addEventListener("drop", (e) => {
             shipArrPosition.push(x);
         }
 
-        const isTrue = (gameFieldsArr, firstPosition, lastShipPosition, shipIsGoodSize) => {
-            for(let n = 0; n < gameFieldsArr.length; n++){
-                if(gameFieldsArr[n].includes(firstPosition)){
-                    if(gameFieldsArr[n].includes(lastShipPosition)){
-                        shipIsGoodSize = true;
-                        shipNameAndSize[indexObj].land = true;
-    
-                        return shipIsGoodSize;
-                    }; 
-                
-                    return shipIsGoodSize = false;
-                }
-            }
-        }
-
         createShip(shipNameAndSize);
 
-        if(!isTrue(gameFieldsArr, firstPosition, lastShipPosition, shipIsGoodSize)){
-            dragged.parentNode.removeChild(dragged);
+        if(!isTrue(gameFieldsArr, firstPosition, lastShipPosition, shipIsGoodSize, indexObj)){
             e.target.style.background = "";
-            createShip(shipNameAndSize);
+            dragged.parentNode.removeChild(dragged);
             shipNameAndSize[indexObj].land = false;
-
+            createShip(shipNameAndSize);
             gameBoardFields(gameFieldsArr);
         }else{
             e.target.style.background = "";
-            dragged.parentNode.removeChild(dragged);
             e.target.appendChild(dragged);
-            
-            for(let i = 0; i < gameFieldsArr.length; i++){
-                for(let j = 0; j < gameFieldsArr[i].length; j++){
-                    if(gameFieldsArr[i][j] == firstPosition){
-                        if(gameFieldsArr[i][j] == 0){
-                            for(let k = 0; k < lengthShip; k++){
-                                shipNameAndSize[indexObj].position.push(gameFieldsArr[i][j + k]);
-                                gameFieldsArr[i][j + k] = 'x';
-                            }
-                            gameFieldsArr[i + 1][j] = 'y';
-                            for(let p = 0; p < lengthShip; p++){
-                                gameFieldsArr[i + 1][j + p] = 'y';
-                            }
-                            gameFieldsArr[i][j + lengthShip] = 'y';
-                        }else if(gameFieldsArr[i][j] == gameFieldsArr[0][j]){
-                            for(let k = 0; k < lengthShip; k++){
-                                shipNameAndSize[indexObj].position.push(gameFieldsArr[i][j + k]);
-                                gameFieldsArr[i][j + k] = 'x';
-                            }
-                            gameFieldsArr[i + 1][j] = 'y';
-                            for(let p = 0; p < lengthShip; p++){
-                                gameFieldsArr[i + 1][j + p] = 'y';
-                            }
-                            gameFieldsArr[i][firstPosition - 1] = 'y';
-                            gameFieldsArr[i][lastShipPosition + 1] = 'y';
-                        }else if(gameFieldsArr[i][j] == gameFieldsArr[9][j] && j != 0){
-                            for(let k = 0; k < lengthShip; k++){
-                                shipNameAndSize[indexObj].position.push(gameFieldsArr[i][j + k]);
-                                gameFieldsArr[i][j + k] = 'x';
-                            }
-                            for(let p = 0; p < lengthShip; p++){
-                                gameFieldsArr[i - 1][j + p] = 'y';
-                            }
-                            gameFieldsArr[i][lengthShip + j] = 'y';
-                            gameFieldsArr[i][j - 1] = 'y';
-                        }else if(gameFieldsArr[i][j] == gameFieldsArr[9][j]){
-                            for(let k = 0; k < lengthShip; k++){
-                                shipNameAndSize[indexObj].position.push(gameFieldsArr[i][j + k]);
-                                gameFieldsArr[i][j + k] = 'x';
-                            }
-                            for(let p = 0; p < lengthShip; p++){
-                                gameFieldsArr[i - 1][j + p] = 'y';
-                            }
-                            gameFieldsArr[i][lengthShip] = 'y';
-                        }else{
-                            for(let k = 0; k < lengthShip; k++){
-                                shipNameAndSize[indexObj].position.push(gameFieldsArr[i][j + k]);
-                                gameFieldsArr[i][j + k] = 'x';
-                            }
-                            gameFieldsArr[i + 1][j] = 'y';
-                            gameFieldsArr[i - 1][j] = 'y';
-                            gameFieldsArr[i][j - 1] = 'y';
-                            gameFieldsArr[i][j + lengthShip] = 'y';
-                            for(let p = 0; p < lengthShip; p++){
-                                gameFieldsArr[i + 1][j + p] = 'y';
-                                gameFieldsArr[i - 1][j + p] = 'y';
-                            }
-                        }
-                    }
-                }
-            }
             dragged.parentNode.removeChild(dragged);
+            
+            addYInArr(gameFieldsArr, firstPosition, lengthShip, indexObj, lastShipPosition);
         }
         createShip(shipNameAndSize);  
     }
@@ -451,8 +421,6 @@ const computerRandomPlays = () => {
         const randomNumber = Math.floor(Math.random() * 99);
 
         if(computerPlaysRandom.findIndex(item => item == randomNumber) > -1){
-            let row;
-            let column;
             let index = computerPlaysRandom.findIndex(item => item == randomNumber);
     
             if(randomNumber.toString().split('').length == 1){
@@ -469,11 +437,8 @@ const computerRandomPlays = () => {
                 for(let i = 0; i < shipNameAndSize.length; i++){
                     for(let j = 0; j < shipNameAndSize[i].position.length; j++){
                         if(shipNameAndSize[i].position[j] == removedItem){
-                            shipNameAndSize[i].position.splice(j, 1);
-
-                            console.log('Computer blow', computerPlaysRandom.length);
-    
                             let isLenghtToZero = [];
+                            shipNameAndSize[i].position.splice(j, 1);
     
                             for(let o = 0; o < shipNameAndSize.length; o++){
                                 if(shipNameAndSize[o].position.length == 0){
