@@ -12,6 +12,13 @@ const computerGameBoardField = (computerArr) => {
                 gameField.dataset.column = j;
                 
                 computerGameboard.appendChild(gameField);
+            }else if(computerArr[i][j] == 'Y'){
+                const gameField = document.createElement('div');
+                gameField.classList.add('blocked');
+                gameField.dataset.row = i;
+                gameField.dataset.column = j;
+                
+                computerGameboard.appendChild(gameField);
             }else{
                 const gameField = document.createElement('div');
                 gameField.classList.add('field');
