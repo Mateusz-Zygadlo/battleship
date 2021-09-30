@@ -52,6 +52,10 @@ const trueOrFalse = (item) => {
     return item !== 'X';
 }
 
+const notY = (item) => {
+    return item != 'Y';
+}
+
 let computerArr = [];
 
 addCountInTenArr(computerArr);
@@ -108,53 +112,53 @@ const computer = () => {
                     const findIndexComputer = computerArr[row].findIndex(item => item == value);
         
                     if(findIndexComputer > 0){
-                        if(findIndexComputer - shipNameAndSizeComputer[i].size >= 0){             
+                        if(findIndexComputer - shipNameAndSizeComputer[i].size >= 0){           
                             for(let j = 0; j < shipNameAndSizeComputer[i].size; j++){
                                 shipNameAndSizeComputer[i].position.push(computerArr[row][findIndexComputer - j]);
                                 computerArr[row][findIndexComputer - j] = 'X';
                             }
                             if(row == 0 && findIndexComputer == 0){
                                 computerArr[row + 1][findIndexComputer + 1] = 'Y';
-                                // for(let q = 0; q < shipNameAndSizeComputer[i].size; q++){
-                                //     computerArr[row + 1][findIndexComputer - q];
-                                // }
-                            }else if(row == 0 && findIndexComputer == 9){
+                                for(let q = 0; q < shipNameAndSizeComputer[i].size; q++){
+                                    computerArr[row + 1][findIndexComputer - q] = 'Y';
+                                }
+                            }else if(row == 9 && findIndexComputer > 0){
                                 computerArr[row][findIndexComputer - shipNameAndSizeComputer[i].size] = 'Y';
-                                // for(let q = 0; q < shipNameAndSizeComputer[i].size; q++){
-                                //     computerArr[row + 1][findIndexComputer - q];
-                                // }
-                            }else if(row >= 0 && findIndexComputer == 0){
-                                computerArr[row + 1][findIndexComputer + 1] = 'Y';
-                                // for(let q = 0; q < shipNameAndSizeComputer[i].size; q++){
-                                //     computerArr[row + 1][findIndexComputer - q];
-                                //     computerArr[row - 1][findIndexComputer - q];
-                                // }
-                            }else if(row == 9 && findIndexComputer == 9){
-                                computerArr[row][findIndexComputer - shipNameAndSizeComputer[i].size] = 'Y';
-                                // for(let q = 0; q < shipNameAndSizeComputer[i].size; q++){
-                                //     computerArr[row - 1][findIndexComputer - q];
-                                // }
-                            }else if(row >= 1 && findIndexComputer >= 1){
+                                for(let q = 0; q < shipNameAndSizeComputer[i].size; q++){
+                                    computerArr[row - 1][findIndexComputer - q] = 'Y';
+                                }
+                            }else if(row == 9 && findIndexComputer == 0){
                                 computerArr[row][findIndexComputer + 1] = 'Y';
                                 computerArr[row][findIndexComputer - shipNameAndSizeComputer[i].size] = 'Y';
-                            }else if(row >= 0 && findIndexComputer == 9){
-                                computerArr[row][findIndexComputer - shipNameAndSizeComputer[i].size] = 'Y';
-                                // for(let q = 0; q < shipNameAndSizeComputer[i].size; q++){
-                                //     computerArr[row + 1][findIndexComputer - q];
-                                //     computerArr[row - 1][findIndexComputer - q];
-                                // }
                             }else if(row == 0 && findIndexComputer > 0){
                                 computerArr[row][findIndexComputer + 1] = 'Y';
                                 computerArr[row][findIndexComputer - shipNameAndSizeComputer[i].size] = 'Y';
-                                // for(let q = 0; q < shipNameAndSizeComputer[i].size; q++){
-                                //     computerArr[row + 1][findIndexComputer - q];
-                                // }
+                                for(let q = 0; q < shipNameAndSizeComputer[i].size; q++){
+                                    computerArr[row + 1][findIndexComputer - q] = 'Y';
+                                }
                             }else{
                                 computerArr[row][findIndexComputer + 1] = 'Y';
                                 computerArr[row][findIndexComputer - shipNameAndSizeComputer[i].size] = 'Y';
+                                for(let q = 0; q < shipNameAndSizeComputer[i].size; q++){
+                                    computerArr[row + 1][findIndexComputer - q] = 'Y';
+                                    computerArr[row - 1][findIndexComputer - q] = 'Y';
+                                }
+                            }
+                            for(let e = 0; e < shipNameAndSizeComputer.length; e++){
+                                if(!shipNameAndSizeComputer[e].position.every(notY)){
+                                    for(let c = 0; c < shipNameAndSizeComputer.length; c++){
+                                        shipNameAndSizeComputer[c].position.length = 0;
+                                    }
+                                    computerArr.length = 0;
+                                    addCountInTenArr(computerArr);
+
+                                    console.log(false);
+
+                                    break;
+                                }
                             }
                             computerGameBoardField(computerArr); 
-                            console.log(computerArr);
+                            console.log(shipNameAndSizeComputer);
                         }
                     }
                 }
@@ -171,30 +175,24 @@ addCountInTenArr(coppyComputerArr);
 let countComputerCoppy = 0;
 
 const computerArrTwo = () => {
-    for(let i = 0; i < shipNameAndSizeComputer.length; i++){
-        for(let j = 0; j < shipNameAndSizeComputer[i].position.length; j++){
-            
-            let row;
-            let column;
-    
-            if(shipNameAndSizeComputer[i].position[j].toString().split('').length == 1){
-                row = 0;
-                column = Number(shipNameAndSizeComputer[i].position[j].toString().split('')[0]);
-            }else{
-                row = shipNameAndSizeComputer[i].position[j].toString().split('')[0];
-                column = shipNameAndSizeComputer[i].position[j].toString().split('')[1];
-            }
-    
-            countComputerCoppy++;
-    
-            coppyComputerArr[row][column] = 'X';
-
-            for(let m = 0; m < computerArr.length; m++){
-                for(let p = 0; p < computerArr[m].length; p++){
-                    if(computerArr[m][p] == 'Y'){
-                        coppyComputerArr[m][p] = 'Y';
-                    }
+    for(let h = 0; h < 1000; h++){
+        for(let i = 0; i < shipNameAndSizeComputer.length; i++){
+            for(let j = 0; j < shipNameAndSizeComputer[i].position.length; j++){
+                
+                let row;
+                let column;
+        
+                if(shipNameAndSizeComputer[i].position[j].toString().split('').length == 1){
+                    row = 0;
+                    column = shipNameAndSizeComputer[i].position[j].toString().split('')[0];
+                }else{
+                    row = shipNameAndSizeComputer[i].position[j].toString().split('')[0];
+                    column = shipNameAndSizeComputer[i].position[j].toString().split('')[1];
                 }
+        
+                countComputerCoppy++;
+    
+                coppyComputerArr[row][column] = 'X';
             }
         }
     }
