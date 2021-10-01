@@ -3,24 +3,31 @@ import createShip from "./components/createShip";
 import computerGameBoardField from "./components/computerGameBoardField";
 import addYInArr from "./components/addYInArr";
 import isTrue from "./components/isTrue";
+import addCountInTenArr from "./components/addCountInArr";
+import addXAndYInComputerArr from "./components/addXAndYInComputerArr";
+import shipStatusPlayer from "./components/shipStatusPlayer";
+import shipStatusComputer from "./components/shipStatusComputer";
+import checkedFields from "./components/checkedFields";
+import winnerPage from "./components/winnerPage";
 
 const gameFieldsArr = [];
+let computerPlaysRandom = [];
+let playerIndexPlays = [];
+let computerArr = [];
+const coppyComputerArr = [];
 
-const addCountInTenArr = (arr) => {
-    let count = 0;
-
-    for(let i = 0; i < 10; i++){
-        const newArr = [];
-    
-        for(let j = 0; j < 10; j++){
-            newArr.push(count);
-            count++;
-        }
-        arr.push(newArr);
+const addHundredNumbers = (arr) => {
+    for(let i = 0; i < 100; i++){
+        arr.push(i);
     }
 }
 
 addCountInTenArr(gameFieldsArr);
+addCountInTenArr(computerArr);
+addCountInTenArr(coppyComputerArr);
+
+addHundredNumbers(playerIndexPlays);
+addHundredNumbers(computerPlaysRandom);
 
 const shipNameAndSize = [
     {name: 'Destroyer', size: 2, id: 2, land: false, position: []},
@@ -38,18 +45,6 @@ const shipNameAndSizeComputer = [
     {name: 'Carrier', size: 5, position: []},
 ]
 
-let computerPlaysRandom = [];
-let playerIndexPlays = [];
-
-const addHundredNumbers = (arr) => {
-    for(let i = 0; i < 100; i++){
-        arr.push(i);
-    }
-}
-
-addHundredNumbers(playerIndexPlays);
-addHundredNumbers(computerPlaysRandom);
-
 const trueOrFalse = (item) => {
     return item !== 'X';
 }
@@ -57,10 +52,6 @@ const trueOrFalse = (item) => {
 const notY = (item) => {
     return item != 'Y';
 }
-
-let computerArr = [];
-
-addCountInTenArr(computerArr);
 
 const randomPosition = (num) => {
     return Math.floor(Math.random() * 94) + shipNameAndSizeComputer[num].size;
@@ -74,9 +65,7 @@ const computer = () => {
 
     for(let b = 0; b < 1000; b++){
         for(let x = 0; x < shipNameAndSizeComputer.length; x++){
-            if(shipNameAndSizeComputer[x].position.every(trueOrFalse)){
-
-            }else{
+            if(!shipNameAndSizeComputer[x].position.every(trueOrFalse)){
                 shipNameAndSizeComputer[x].position.length = 0;
             }
         }
@@ -87,7 +76,6 @@ const computer = () => {
                     countArr += computerArr[o].filter(item => item == 'X').length;
                 };
             }
-            console.log(countArr);
             
             return {
                 computerArr,
@@ -118,47 +106,8 @@ const computer = () => {
                                 shipNameAndSizeComputer[i].position.push(computerArr[row][findIndexComputer - j]);
                                 computerArr[row][findIndexComputer - j] = 'X';
                             }
-                            if(row == 0 && findIndexComputer == 0){
-                                computerArr[row + 1][findIndexComputer + 1] = 'Y';
-                                for(let q = 0; q < shipNameAndSizeComputer[i].size; q++){
-                                    computerArr[row + 1][findIndexComputer - q] = 'Y';
-                                }
-                            }else if(row == 9 && findIndexComputer > 0){
-                                computerArr[row][findIndexComputer - shipNameAndSizeComputer[i].size] = 'Y';
-                                for(let q = 0; q < shipNameAndSizeComputer[i].size; q++){
-                                    computerArr[row - 1][findIndexComputer - q] = 'Y';
-                                }
-                            }else if(row == 9 && findIndexComputer == 0){
-                                computerArr[row][findIndexComputer + 1] = 'Y';
-                                computerArr[row][findIndexComputer - shipNameAndSizeComputer[i].size] = 'Y';
-                            }else if(row == 0 && findIndexComputer > 0){
-                                computerArr[row][findIndexComputer + 1] = 'Y';
-                                computerArr[row][findIndexComputer - shipNameAndSizeComputer[i].size] = 'Y';
-                                for(let q = 0; q < shipNameAndSizeComputer[i].size; q++){
-                                    computerArr[row + 1][findIndexComputer - q] = 'Y';
-                                }
-                            }else{
-                                computerArr[row][findIndexComputer + 1] = 'Y';
-                                computerArr[row][findIndexComputer - shipNameAndSizeComputer[i].size] = 'Y';
-                                for(let q = 0; q < shipNameAndSizeComputer[i].size; q++){
-                                    computerArr[row + 1][findIndexComputer - q] = 'Y';
-                                    computerArr[row - 1][findIndexComputer - q] = 'Y';
-                                }
-                            }
-                            for(let e = 0; e < shipNameAndSizeComputer.length; e++){
-                                if(!shipNameAndSizeComputer[e].position.every(notY)){
-                                    for(let c = 0; c < shipNameAndSizeComputer.length; c++){
-                                        shipNameAndSizeComputer[c].position.length = 0;
-                                    }
-                                    computerArr.length = 0;
-                                    addCountInTenArr(computerArr);
-
-                                    console.log(false);
-
-                                    break;
-                                }
-                            }
-                            console.log(shipNameAndSizeComputer);
+                            
+                            addXAndYInComputerArr(row, findIndexComputer, computerArr, shipNameAndSizeComputer, i);
                         }
                     }
                 }
@@ -168,17 +117,10 @@ const computer = () => {
 }
 computer();
 
-const coppyComputerArr = [];
-
-addCountInTenArr(coppyComputerArr);
-
-let countComputerCoppy = 0;
-
 const computerArrTwo = () => {
     for(let h = 0; h < 1000; h++){
         for(let i = 0; i < shipNameAndSizeComputer.length; i++){
-            for(let j = 0; j < shipNameAndSizeComputer[i].position.length; j++){
-                
+            for(let j = 0; j < shipNameAndSizeComputer[i].position.length; j++){ 
                 let row;
                 let column;
         
@@ -189,44 +131,13 @@ const computerArrTwo = () => {
                     row = shipNameAndSizeComputer[i].position[j].toString().split('')[0];
                     column = shipNameAndSizeComputer[i].position[j].toString().split('')[1];
                 }
-        
-                countComputerCoppy++;
     
                 coppyComputerArr[row][column] = 'X';
             }
         }
     }
 }
-
 computerArrTwo();
-
-console.log(coppyComputerArr, countComputerCoppy);
-
-const ship = (bodyLength, whereHits, sunk) => {
-    
-    return{
-        bodyLength,
-        whereHits,
-        sunk,
-    }
-}
-
-const hit = (hitPosition) => {
-    
-    return{
-        hitPosition,
-    }
-}
-
-const isSunk = (bodyLength) => {
-    const hits = bodyLength - ship().sunk;
-
-    if(hits == 0){
-        return 'ship is sunk';
-    }
-
-    return hits;
-}
 
 let dragged;
 
@@ -262,57 +173,20 @@ document.addEventListener("dragleave", (e) => {
     }
 }, false);
 
-const shipStatusTwo = (obj) => {
-    const shipsStatus = document.querySelector('.shipsStatus');
-    shipsStatus.textContent = '';
-
-    for(let i = 0; i < obj.length; i++){
-        if(obj[i].name){
-            const shipStat = document.createElement('div');
-            shipStat.classList.add('ship');
-
-            const shipName = document.createElement('div');
-            shipName.classList.add('shipName');
-            shipName.textContent = obj[i].name;
-
-            shipStat.appendChild(shipName);
-
-            const shipSize = document.createElement('div');
-            shipSize.classList.add('shipSize');
-            shipSize.textContent = obj[i].position.length;
-
-            shipStat.appendChild(shipSize);
-
-            shipsStatus.appendChild(shipStat);
+const isPositionTrue = (shipNameAndSize) => {
+    let count = 0;
+    for(let i = 0; i < shipNameAndSize.length; i++){
+        if(shipNameAndSize[i].position.length){
+            count++;
         }
     }
-}
-const shipStatusComputer= (obj) => {
-    const shipsStatusTwo = document.querySelector('.shipsStatusTwo');
-    shipsStatusTwo.textContent = '';
 
-    for(let i = 0; i < obj.length; i++){
-        if(obj[i].name){
-            const shipStat = document.createElement('div');
-            shipStat.classList.add('ship');
-
-            const shipName = document.createElement('div');
-            shipName.classList.add('shipName');
-            shipName.textContent = obj[i].name;
-
-            shipStat.appendChild(shipName);
-
-            const shipSize = document.createElement('div');
-            shipSize.classList.add('shipSize');
-            shipSize.textContent = obj[i].position.length;
-
-            shipStat.appendChild(shipSize);
-
-            shipsStatusTwo.appendChild(shipStat);
-        }
+    if(count == 5){
+        return true;
+    }else{
+        return false;
     }
 }
-
 
 document.addEventListener("drop", (e) => {
     e.preventDefault();
@@ -366,21 +240,6 @@ document.addEventListener("drop", (e) => {
         }
         createShip(shipNameAndSize);  
     }
-
-    const isPositionTrue = (shipNameAndSize) => {
-        let count = 0;
-        for(let i = 0; i < shipNameAndSize.length; i++){
-            if(shipNameAndSize[i].position.length){
-                count++;
-            }
-        }
-
-        if(count == 5){
-            return true;
-        }else{
-            return false;
-        }
-    }
     
     gameBoardFields(gameFieldsArr);
 
@@ -391,24 +250,9 @@ document.addEventListener("drop", (e) => {
     }
 }, false);
 
-const checkedFields = () => {
-    const container = document.createElement('div');
-    container.classList.add('container');
-    container.classList.add('visiblity');
-
-    const checkedField = document.createElement('div');
-    checkedField.classList.add('checkedField');
-    checkedField.textContent = 'You cannot click on the field again';
-
-    container.appendChild(checkedField);
-
-    document.body.appendChild(container);
-}
-
 checkedFields();
 
 const startGame = () => {
-
     const computerGame = document.createElement('div');
     computerGame.classList.add('computerGameBoard');
 
@@ -420,7 +264,7 @@ const startGame = () => {
     const gameboardMain = document.querySelector('.computerGameBoard');
     const testGameBoard = [...gameboardMain.childNodes];
 
-    shipStatusTwo(shipNameAndSize);
+    shipStatusPlayer(shipNameAndSize);
     shipStatusComputer(shipNameAndSizeComputer);
 
     testGameBoard.forEach(item => {
@@ -431,16 +275,11 @@ const startGame = () => {
                 containerTest.classList.add('visiblity');
             }
             
-            if(e.target.classList.contains('Clicked')){
+            if(e.target.classList.contains('Clicked') || e.target.classList.contains('delete')){
                 containerTest.classList.remove('visiblity');
                 checkedFields();
                 return;
             } 
-            if(e.target.classList.contains('delete')){
-                containerTest.classList.remove('visiblity');
-                checkedFields();
-                return;
-            }
             
             if(e.target.classList.contains('field')){
                 e.target.classList.remove('field');
@@ -477,9 +316,7 @@ const startGame = () => {
             computerRandomPlays();
             gameBoardFields(gameFieldsArr);
 
-            console.log(gameFieldsArr);
-
-            shipStatusTwo(shipNameAndSize);
+            shipStatusPlayer(shipNameAndSize);
             shipStatusComputer(shipNameAndSizeComputer);
         })
     })
@@ -539,42 +376,20 @@ const computerRandomPlays = () => {
                     }
                 }
 
-                console.log('You not blow', computerPlaysRandom.length, positionLengthArr.length);
-
                 return;
             }
         }
     }
 }
 
-const winnerPage = (winner) => {
-    const game = document.querySelector('.game');
-    
-    const fixedWinnerPage = document.createElement('div');
-    fixedWinnerPage.classList.add('fixedWinnerPage');
-    
-    const div = document.createElement('div');
-    div.classList.add('content');
-    
-    const h1 = document.createElement('h1');
-    h1.textContent = `The winner is [${winner}]`;
-
-    const button = document.createElement('button');
-    button.textContent = 'reset';
-    button.classList.add('reset');
-
-    div.appendChild(h1);
-    
-    div.appendChild(button);
-
-    fixedWinnerPage.appendChild(div);
-
-    game.appendChild(fixedWinnerPage);
-}
-
 document.addEventListener('click', (e) => {
     if(e.target.classList.contains('reset')){
-        const fixedWinnerPage = document.querySelector('.fixedWinnerPage');
+        reset();
+    }
+})
+
+const reset = () => {
+    const fixedWinnerPage = document.querySelector('.fixedWinnerPage');
         fixedWinnerPage.parentNode.removeChild(fixedWinnerPage);
 
         const gameBoardComputer = document.querySelector('.gameBoardComputer');
@@ -615,5 +430,4 @@ document.addEventListener('click', (e) => {
         createShip(shipNameAndSize);
 
         console.log(shipNameAndSize);
-    }
-})
+}
