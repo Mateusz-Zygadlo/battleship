@@ -15,6 +15,7 @@ body{
     display: flex;
     justify-content: space-around;
     align-items: center;
+    padding-top: 5px;
 }
 .gameboard{
     width: 500px;
@@ -38,7 +39,6 @@ body{
 .ships{
     max-width: 500px;
     max-height: 500px;
-    padding: 20px;
     background-color: aquamarine;
 }
 .ship{
@@ -52,7 +52,7 @@ body{
     height: 50px;
 }
 
-@media only screen and (max-width: 1050px){
+/* @media only screen and (max-width: 1050px){
     .gameboard{
         width: 400px;
         height: 400px;
@@ -69,7 +69,7 @@ body{
         display: flex;
         flex-direction: column;
     }
-}
+} */
 
 #draggable {
     text-align: center;
@@ -142,4 +142,17 @@ body{
 }
 .content button{
     margin-top: 30px;
+}
+.container{
+    position: absolute; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    background-color: red;
+}
+.visiblity{
+    visibility: hidden;
 }

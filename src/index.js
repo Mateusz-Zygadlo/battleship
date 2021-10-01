@@ -391,10 +391,23 @@ document.addEventListener("drop", (e) => {
     }
 }, false);
 
-const startGame = () => {
+const checkedFields = () => {
+    const container = document.createElement('div');
+    container.classList.add('container');
+    container.classList.add('visiblity');
 
-    // const shipsClass = document.querySelector('.ships');
-    // shipsClass.parentNode.removeChild(shipsClass);
+    const checkedField = document.createElement('div');
+    checkedField.classList.add('checkedField');
+    checkedField.textContent = 'You cannot click on the field again';
+
+    container.appendChild(checkedField);
+
+    document.body.appendChild(container);
+}
+
+checkedFields();
+
+const startGame = () => {
 
     const computerGame = document.createElement('div');
     computerGame.classList.add('computerGameBoard');
@@ -411,11 +424,21 @@ const startGame = () => {
     shipStatusComputer(shipNameAndSizeComputer);
 
     testGameBoard.forEach(item => {
-        item.addEventListener('click', (e) => {                     
+        item.addEventListener('click', (e) => {   
+            const containerTest = document.querySelector('.container');
+
+            if(!containerTest.classList.contains('visiblity')){
+                containerTest.classList.add('visiblity');
+            }
+            
             if(e.target.classList.contains('Clicked')){
+                containerTest.classList.remove('visiblity');
+                checkedFields();
                 return;
             } 
             if(e.target.classList.contains('delete')){
+                containerTest.classList.remove('visiblity');
+                checkedFields();
                 return;
             }
             
