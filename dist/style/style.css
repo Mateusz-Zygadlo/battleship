@@ -120,9 +120,26 @@ body{
     align-items: center;
     flex-direction: column;
 }
-.shipsStatus{
+.ship{
     margin-top: 10px;
 }
 .shipName{
     margin-right: 20px;
+}
+.Clicked{
+    background-color: orange;
+}
+.delete{
+    background-color: orchid;
+}
+.content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+}
+.content button{
+    margin-top: 30px;
 }

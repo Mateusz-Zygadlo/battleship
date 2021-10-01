@@ -19,6 +19,20 @@ const gameBoardFields = (gameFieldsArr) => {
                 gameField.dataset.column = j;
 
                 gameBoardClass.appendChild(gameField);
+            }else if(gameFieldsArr[i][j] == 'C'){
+                const gameField = document.createElement('div');
+                gameField.classList.add('Clicked');
+                gameField.dataset.row = i;
+                gameField.dataset.column = j;
+
+                gameBoardClass.appendChild(gameField);
+            }else if(gameFieldsArr[i][j] == 'D'){
+                const gameField = document.createElement('div');
+                gameField.classList.add('delete');
+                gameField.dataset.row = i;
+                gameField.dataset.column = j;
+
+                gameBoardClass.appendChild(gameField);
             }else{
                 const gameField = document.createElement('div');
                 gameField.classList.add('gameField');

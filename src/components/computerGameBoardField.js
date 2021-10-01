@@ -12,9 +12,9 @@ const computerGameBoardField = (computerArr) => {
                 gameField.dataset.column = j;
                 
                 computerGameboard.appendChild(gameField);
-            }else if(computerArr[i][j] == 'Y'){
+            }else if(computerArr[i][j] == 'C'){
                 const gameField = document.createElement('div');
-                gameField.classList.add('blocked');
+                gameField.classList.add('Clicked');
                 gameField.dataset.row = i;
                 gameField.dataset.column = j;
                 

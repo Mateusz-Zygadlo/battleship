@@ -392,8 +392,9 @@ document.addEventListener("drop", (e) => {
 }, false);
 
 const startGame = () => {
-    const shipsClass = document.querySelector('.ships');
-    shipsClass.parentNode.removeChild(shipsClass);
+
+    // const shipsClass = document.querySelector('.ships');
+    // shipsClass.parentNode.removeChild(shipsClass);
 
     const computerGame = document.createElement('div');
     computerGame.classList.add('computerGameBoard');
@@ -411,6 +412,18 @@ const startGame = () => {
 
     testGameBoard.forEach(item => {
         item.addEventListener('click', (e) => {                     
+            if(e.target.classList.contains('Clicked')){
+                return;
+            } 
+            if(e.target.classList.contains('delete')){
+                return;
+            }
+            
+            if(e.target.classList.contains('field')){
+                e.target.classList.remove('field');
+                e.target.classList.add('Clicked');
+            }
+            
             if(e.target.classList.contains('plays')){
                 let isLenghtToZero = [];
 
@@ -424,8 +437,8 @@ const startGame = () => {
                     }
                 }
 
-                e.target.classList.add('field');
                 e.target.classList.remove('plays');
+                e.target.classList.add('delete');
 
                 for(let o = 0; o < shipNameAndSizeComputer.length; o++){
                     if(shipNameAndSizeComputer[o].position.length == 0){
@@ -439,6 +452,9 @@ const startGame = () => {
                 }
             }
             computerRandomPlays();
+            gameBoardFields(gameFieldsArr);
+
+            console.log(gameFieldsArr);
 
             shipStatusTwo(shipNameAndSize);
             shipStatusComputer(shipNameAndSizeComputer);
@@ -465,6 +481,8 @@ const computerRandomPlays = () => {
 
             let removedItem = computerPlaysRandom.splice(index, 1);
 
+            gameFieldsArr[row][column] = 'C';
+
             if(removedItem){
                 for(let i = 0; i < shipNameAndSize.length; i++){
                     for(let j = 0; j < shipNameAndSize[i].position.length; j++){
@@ -477,6 +495,8 @@ const computerRandomPlays = () => {
                                     isLenghtToZero.push('true');
                                 }
                             }
+
+                            gameFieldsArr[row][column] = 'D';
             
                             if(isLenghtToZero.length == 5){
                                 winnerPage('computer');
@@ -510,10 +530,67 @@ const winnerPage = (winner) => {
     const fixedWinnerPage = document.createElement('div');
     fixedWinnerPage.classList.add('fixedWinnerPage');
     
+    const div = document.createElement('div');
+    div.classList.add('content');
+    
     const h1 = document.createElement('h1');
     h1.textContent = `The winner is [${winner}]`;
 
-    fixedWinnerPage.appendChild(h1);
+    const button = document.createElement('button');
+    button.textContent = 'reset';
+    button.classList.add('reset');
+
+    div.appendChild(h1);
+    
+    div.appendChild(button);
+
+    fixedWinnerPage.appendChild(div);
 
     game.appendChild(fixedWinnerPage);
 }
+
+document.addEventListener('click', (e) => {
+    if(e.target.classList.contains('reset')){
+        const fixedWinnerPage = document.querySelector('.fixedWinnerPage');
+        fixedWinnerPage.parentNode.removeChild(fixedWinnerPage);
+
+        const gameBoardComputer = document.querySelector('.gameBoardComputer');
+        gameBoardComputer.textContent = '';
+
+        const shipsStatusTwo = document.querySelector('.shipsStatusTwo');
+        shipsStatusTwo.textContent = '';
+
+        const shipsStatus = document.querySelector('.shipsStatus');
+        shipsStatus.textContent = '';
+
+        computerArr.length = 0;
+        gameFieldsArr.length = 0;
+
+        addCountInTenArr(computerArr);
+        addCountInTenArr(gameFieldsArr);
+
+        playerIndexPlays.length = 0;
+        computerPlaysRandom.length = 0;
+
+        coppyComputerArr.length = 0;
+
+        addCountInTenArr(coppyComputerArr);
+
+        addHundredNumbers(playerIndexPlays);
+        addHundredNumbers(computerPlaysRandom);
+
+        for(let i = 0; i < shipNameAndSize.length; i++){
+            shipNameAndSize[i].position.length = 0;
+            shipNameAndSizeComputer[i].position.length = 0;
+            shipNameAndSize[i].land = false;
+        }
+
+        computer();
+        computerArrTwo();
+
+        gameBoardFields(gameFieldsArr);
+        createShip(shipNameAndSize);
+
+        console.log(shipNameAndSize);
+    }
+})
