@@ -84,7 +84,7 @@ body{
     background-color: black;
 }
 .blocked{
-    background-color: pink;
+    background-color: yellow;
 }
 .field{
     border: 1px solid black;

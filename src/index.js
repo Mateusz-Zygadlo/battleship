@@ -1,6 +1,8 @@
 import gameBoardFields from "./components/gameBoardFields";
 import createShip from "./components/createShip";
 import computerGameBoardField from "./components/computerGameBoardField";
+import addYInArr from "./components/addYInArr";
+import isTrue from "./components/isTrue";
 
 const gameFieldsArr = [];
 
@@ -69,7 +71,6 @@ const computer = () => {
     computerArr.length = 0;
 
     addCountInTenArr(computerArr);
-    computerGameBoardField(computerArr);
 
     for(let b = 0; b < 1000; b++){
         for(let x = 0; x < shipNameAndSizeComputer.length; x++){
@@ -157,7 +158,6 @@ const computer = () => {
                                     break;
                                 }
                             }
-                            computerGameBoardField(computerArr); 
                             console.log(shipNameAndSizeComputer);
                         }
                     }
@@ -201,9 +201,6 @@ const computerArrTwo = () => {
 computerArrTwo();
 
 console.log(coppyComputerArr, countComputerCoppy);
-
-
-computerGameBoardField(coppyComputerArr);
 
 const ship = (bodyLength, whereHits, sunk) => {
     
@@ -265,83 +262,6 @@ document.addEventListener("dragleave", (e) => {
     }
 }, false);
 
-const isTrue = (gameFieldsArr, firstPosition, lastShipPosition, shipIsGoodSize, indexObj) => {
-    for(let n = 0; n < gameFieldsArr.length; n++){
-        if(gameFieldsArr[n].includes(firstPosition)){
-            if(gameFieldsArr[n].includes(lastShipPosition)){
-                shipIsGoodSize = true;
-                shipNameAndSize[indexObj].land = true;
-
-                return shipIsGoodSize;
-            }; 
-        
-            return shipIsGoodSize = false;
-        }
-    }
-}
-
-const addYInArr = (gameFieldsArr, firstPosition, lengthShip, indexObj, lastShipPosition) => {
-    for(let i = 0; i < gameFieldsArr.length; i++){
-        for(let j = 0; j < gameFieldsArr[i].length; j++){
-            if(gameFieldsArr[i][j] == firstPosition){
-                if(gameFieldsArr[i][j] == 0){
-                    for(let k = 0; k < lengthShip; k++){
-                        shipNameAndSize[indexObj].position.push(gameFieldsArr[i][j + k]);
-                        gameFieldsArr[i][j + k] = 'x';
-                    }
-                    gameFieldsArr[i + 1][j] = 'y';
-                    for(let p = 0; p < lengthShip; p++){
-                        gameFieldsArr[i + 1][j + p] = 'y';
-                    }
-                    gameFieldsArr[i][j + lengthShip] = 'y';
-                }else if(gameFieldsArr[i][j] == gameFieldsArr[0][j]){
-                    for(let k = 0; k < lengthShip; k++){
-                        shipNameAndSize[indexObj].position.push(gameFieldsArr[i][j + k]);
-                        gameFieldsArr[i][j + k] = 'x';
-                    }
-                    gameFieldsArr[i + 1][j] = 'y';
-                    for(let p = 0; p < lengthShip; p++){
-                        gameFieldsArr[i + 1][j + p] = 'y';
-                    }
-                    gameFieldsArr[i][firstPosition - 1] = 'y';
-                    gameFieldsArr[i][lastShipPosition + 1] = 'y';
-                }else if(gameFieldsArr[i][j] == gameFieldsArr[9][j] && j != 0){
-                    for(let k = 0; k < lengthShip; k++){
-                        shipNameAndSize[indexObj].position.push(gameFieldsArr[i][j + k]);
-                        gameFieldsArr[i][j + k] = 'x';
-                    }
-                    for(let p = 0; p < lengthShip; p++){
-                        gameFieldsArr[i - 1][j + p] = 'y';
-                    }
-                    gameFieldsArr[i][lengthShip + j] = 'y';
-                    gameFieldsArr[i][j - 1] = 'y';
-                }else if(gameFieldsArr[i][j] == gameFieldsArr[9][j]){
-                    for(let k = 0; k < lengthShip; k++){
-                        shipNameAndSize[indexObj].position.push(gameFieldsArr[i][j + k]);
-                        gameFieldsArr[i][j + k] = 'x';
-                    }
-                    for(let p = 0; p < lengthShip; p++){
-                        gameFieldsArr[i - 1][j + p] = 'y';
-                    }
-                    gameFieldsArr[i][lengthShip] = 'y';
-                }else{
-                    for(let k = 0; k < lengthShip; k++){
-                        shipNameAndSize[indexObj].position.push(gameFieldsArr[i][j + k]);
-                        gameFieldsArr[i][j + k] = 'x';
-                    }
-                    gameFieldsArr[i + 1][j] = 'y';
-                    gameFieldsArr[i - 1][j] = 'y';
-                    gameFieldsArr[i][j - 1] = 'y';
-                    gameFieldsArr[i][j + lengthShip] = 'y';
-                    for(let p = 0; p < lengthShip; p++){
-                        gameFieldsArr[i + 1][j + p] = 'y';
-                        gameFieldsArr[i - 1][j + p] = 'y';
-                    }
-                }
-            }
-        }
-    }
-}
 
 document.addEventListener("drop", (e) => {
     e.preventDefault();
@@ -380,7 +300,7 @@ document.addEventListener("drop", (e) => {
 
         createShip(shipNameAndSize);
 
-        if(!isTrue(gameFieldsArr, firstPosition, lastShipPosition, shipIsGoodSize, indexObj)){
+        if(!isTrue(gameFieldsArr, firstPosition, lastShipPosition, shipIsGoodSize, indexObj, shipNameAndSize)){
             e.target.style.background = "";
             dragged.parentNode.removeChild(dragged);
             shipNameAndSize[indexObj].land = false;
@@ -391,7 +311,7 @@ document.addEventListener("drop", (e) => {
             e.target.appendChild(dragged);
             dragged.parentNode.removeChild(dragged);
             
-            addYInArr(gameFieldsArr, firstPosition, lengthShip, indexObj, lastShipPosition);
+            addYInArr(gameFieldsArr, firstPosition, lengthShip, indexObj, lastShipPosition, shipNameAndSize);
         }
         createShip(shipNameAndSize);  
     }
@@ -423,6 +343,14 @@ document.addEventListener("drop", (e) => {
 const startGame = () => {
     const shipsClass = document.querySelector('.ships');
     shipsClass.parentNode.removeChild(shipsClass);
+
+    const computerGame = document.createElement('div');
+    computerGame.classList.add('computerGameBoard');
+
+    const gameHTML = document.querySelector('.game');
+    gameHTML.appendChild(computerGame);
+
+    computerGameBoardField(coppyComputerArr);
 
     const gameboardMain = document.querySelector('.computerGameBoard');
     const testGameBoard = [...gameboardMain.childNodes];
@@ -467,6 +395,8 @@ const startGame = () => {
 const computerRandomPlays = () => {
     for(let f = 0; f < 1000; f++){
         const randomNumber = Math.floor(Math.random() * 99);
+        let row;
+        let column;
 
         if(computerPlaysRandom.findIndex(item => item == randomNumber) > -1){
             let index = computerPlaysRandom.findIndex(item => item == randomNumber);
