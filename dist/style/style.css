@@ -108,3 +108,21 @@ body{
     font-weight: 100;
     color: white;
 }
+.player{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.computer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.shipsStatus{
+    margin-top: 10px;
+}
+.shipName{
+    margin-right: 20px;
+}

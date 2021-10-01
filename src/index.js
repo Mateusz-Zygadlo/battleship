@@ -262,6 +262,57 @@ document.addEventListener("dragleave", (e) => {
     }
 }, false);
 
+const shipStatusTwo = (obj) => {
+    const shipsStatus = document.querySelector('.shipsStatus');
+    shipsStatus.textContent = '';
+
+    for(let i = 0; i < obj.length; i++){
+        if(obj[i].name){
+            const shipStat = document.createElement('div');
+            shipStat.classList.add('ship');
+
+            const shipName = document.createElement('div');
+            shipName.classList.add('shipName');
+            shipName.textContent = obj[i].name;
+
+            shipStat.appendChild(shipName);
+
+            const shipSize = document.createElement('div');
+            shipSize.classList.add('shipSize');
+            shipSize.textContent = obj[i].position.length;
+
+            shipStat.appendChild(shipSize);
+
+            shipsStatus.appendChild(shipStat);
+        }
+    }
+}
+const shipStatusComputer= (obj) => {
+    const shipsStatusTwo = document.querySelector('.shipsStatusTwo');
+    shipsStatusTwo.textContent = '';
+
+    for(let i = 0; i < obj.length; i++){
+        if(obj[i].name){
+            const shipStat = document.createElement('div');
+            shipStat.classList.add('ship');
+
+            const shipName = document.createElement('div');
+            shipName.classList.add('shipName');
+            shipName.textContent = obj[i].name;
+
+            shipStat.appendChild(shipName);
+
+            const shipSize = document.createElement('div');
+            shipSize.classList.add('shipSize');
+            shipSize.textContent = obj[i].position.length;
+
+            shipStat.appendChild(shipSize);
+
+            shipsStatusTwo.appendChild(shipStat);
+        }
+    }
+}
+
 
 document.addEventListener("drop", (e) => {
     e.preventDefault();
@@ -347,13 +398,16 @@ const startGame = () => {
     const computerGame = document.createElement('div');
     computerGame.classList.add('computerGameBoard');
 
-    const gameHTML = document.querySelector('.game');
+    const gameHTML = document.querySelector('.gameBoardComputer');
     gameHTML.appendChild(computerGame);
 
     computerGameBoardField(coppyComputerArr);
 
     const gameboardMain = document.querySelector('.computerGameBoard');
     const testGameBoard = [...gameboardMain.childNodes];
+
+    shipStatusTwo(shipNameAndSize);
+    shipStatusComputer(shipNameAndSizeComputer);
 
     testGameBoard.forEach(item => {
         item.addEventListener('click', (e) => {                     
@@ -385,9 +439,9 @@ const startGame = () => {
                 }
             }
             computerRandomPlays();
-            console.log(computerPlaysRandom.length);
 
-            console.log(shipNameAndSize);
+            shipStatusTwo(shipNameAndSize);
+            shipStatusComputer(shipNameAndSizeComputer);
         })
     })
 }
