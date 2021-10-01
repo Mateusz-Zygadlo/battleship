@@ -15,12 +15,12 @@ body{
     display: flex;
     justify-content: space-around;
     align-items: center;
-    padding-top: 5px;
+    padding-top: 20px;
 }
 .gameboard{
     width: 500px;
     height: 500px;
-    background-color: aquamarine;
+    background-color: white;
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: repeat(10, 1fr);
@@ -28,7 +28,7 @@ body{
 .computerGameBoard{
     width: 500px;
     height: 500px;
-    background-color: aquamarine;
+    background-color: white;
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: repeat(10, 1fr);
@@ -39,7 +39,7 @@ body{
 .ships{
     max-width: 500px;
     max-height: 500px;
-    background-color: aquamarine;
+    background-color: white;
 }
 .ship{
     display: flex;
@@ -51,26 +51,6 @@ body{
     width: 50px;
     height: 50px;
 }
-
-/* @media only screen and (max-width: 1050px){
-    .gameboard{
-        width: 400px;
-        height: 400px;
-    }
-}
-@media only screen and (max-width: 880px){
-    .gameboard{
-        width: 350px;
-        height: 350px;
-    }
-}
-@media only screen and (max-width: 750px){
-    .game{
-        display: flex;
-        flex-direction: column;
-    }
-} */
-
 #draggable {
     text-align: center;
     background-color: black;
@@ -84,13 +64,14 @@ body{
     background-color: black;
 }
 .blocked{
-    background-color: yellow;
+    background-color: white;
+    border: 1px solid black;
 }
 .field{
     border: 1px solid black;
 }
 .plays{
-    background-color: black;
+    border: 1px solid black;
 }
 .fixedWinnerPage{
     position: absolute;
@@ -127,24 +108,31 @@ body{
     margin-right: 20px;
 }
 .Clicked{
-    background-color: orange;
+    background-color: lightblue;
 }
 .delete{
-    background-color: orchid;
+    background-color: red;
 }
 .content{
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    width: 100vw;
+    width: 80vw;
     height: 100vh;
+    text-align: center;
 }
 .content button{
     margin-top: 30px;
+    background-color: white;
+    color: black;
+    border: none;
+    padding: 8px 20px;
+    font-size: 15px;
+    cursor: pointer;
 }
 .container{
-    position: absolute; 
+    position: fixed; 
     top: 0;
     left: 0;
     width: 100%;
@@ -155,4 +143,62 @@ body{
 }
 .visiblity{
     visibility: hidden;
+}
+
+@media only screen and (max-width: 1200px){
+    .gameboard{
+        width: 450px;
+        height: 450px;
+    }
+    .computerGameBoard{
+        width: 450px;
+        height: 450px;
+    }
+}
+
+@media only screen and (max-width: 1000px){
+    .gameboard{
+        width: 400px;
+        height: 400px;
+    }
+    .computerGameBoard{
+        width: 400px;
+        height: 400px;
+    }
+}
+@media only screen and (max-width: 850px){
+    body{
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    .game{
+        display: flex;
+        flex-direction: column;
+    }
+    .shipsStatus{
+        margin-bottom: 20px;
+    }
+    .ships{
+        margin-bottom: 30px;
+    }
+    .gameboard{
+        width: 450px;
+        height: 450px;
+    }
+    .computerGameBoard{
+        width: 450px;
+        height: 450px;
+    }
+}
+
+@media only screen and (max-width: 500px){
+    .gameboard{
+        width: 400px;
+        height: 400px;
+    }
+    .computerGameBoard{
+        width: 400px;
+        height: 400px;
+        margin-top: 20px;
+    }
 }

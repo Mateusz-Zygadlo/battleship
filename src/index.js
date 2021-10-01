@@ -9,6 +9,7 @@ import shipStatusPlayer from "./components/shipStatusPlayer";
 import shipStatusComputer from "./components/shipStatusComputer";
 import checkedFields from "./components/checkedFields";
 import winnerPage from "./components/winnerPage";
+import trueOrFalse from "./components/trueOrFalse";
 
 const gameFieldsArr = [];
 let computerPlaysRandom = [];
@@ -45,14 +46,6 @@ const shipNameAndSizeComputer = [
     {name: 'Carrier', size: 5, position: []},
 ]
 
-const trueOrFalse = (item) => {
-    return item !== 'X';
-}
-
-const notY = (item) => {
-    return item != 'Y';
-}
-
 const randomPosition = (num) => {
     return Math.floor(Math.random() * 94) + shipNameAndSizeComputer[num].size;
 }
@@ -88,14 +81,11 @@ const computer = () => {
                 }else{
                     const value = randomPosition(i);
                     let row;
-                    let column;
         
                     if(value.toString().length == 1){
                         row = 0;
-                        column = Number(value.toString().split('')[0]);
                     }else{
                         row = Number(value.toString().split('')[0]);
-                        column = Number(value.toString().split('')[1]);
                     }
         
                     const findIndexComputer = computerArr[row].findIndex(item => item == value);
@@ -428,6 +418,4 @@ const reset = () => {
 
         gameBoardFields(gameFieldsArr);
         createShip(shipNameAndSize);
-
-        console.log(shipNameAndSize);
 }
